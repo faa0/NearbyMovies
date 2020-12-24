@@ -24,7 +24,7 @@ class MovieRepository : ViewModel() {
             .text()
     }
 
-    fun getDetailPosterUrlSoon(element: Element): String {
+    fun getMovieUrlSoon(element: Element): String {
         return (BASE_URL + element.select("a")
             .attr("href"))
     }
@@ -41,7 +41,7 @@ class MovieRepository : ViewModel() {
             .attr("src"))
     }
 
-    fun getDetailPosterUrlPremiere(element: Element): String {
+    fun getMovieUrlPremiere(element: Element): String {
         return element.select("a")
             .attr("href")
     }

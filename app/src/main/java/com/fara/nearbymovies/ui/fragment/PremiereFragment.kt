@@ -5,6 +5,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.navigation.fragment.findNavController
 import com.fara.nearbymovies.R
 import com.fara.nearbymovies.adapter.PremiereAdapter
 import com.fara.nearbymovies.adapter.SoonAdapter
@@ -28,6 +29,16 @@ class PremiereFragment : Fragment(R.layout.fragment_premiere) {
         viewModel = (activity as MovieActivity).viewModel
         setupSoonRecyclerView()
         setupPremiereRecyclerView()
+
+        premiereAdapter.setOnItemClickListener {
+            val bundle = Bundle().apply {
+                putSerializable("premiere", it)
+            }
+            findNavController().navigate(
+                R.id.action_premiereFragment_to_detailFragment,
+                bundle
+            )
+        }
 
         viewModel.premiereLiveData.observe(viewLifecycleOwner, {
             premiereAdapter.differ.submitList(it)

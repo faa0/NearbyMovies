@@ -16,16 +16,16 @@ class MovieViewModel(
     private val movieRepository: MovieRepository
 ) : ViewModel() {
 
+    private val soonList = mutableListOf<Soon>()
+    private val premiereList = mutableListOf<Premiere>()
+    val soonLiveData = MutableLiveData<List<Soon>>()
+    val premiereLiveData = MutableLiveData<List<Premiere>>()
+
     init {
         GlobalScope.launch {
             getData()
         }
     }
-
-    private val soonList = mutableListOf<Soon>()
-    private val premiereList = mutableListOf<Premiere>()
-    val premiereLiveData = MutableLiveData<List<Premiere>>()
-    val soonLiveData = MutableLiveData<List<Soon>>()
 
     private fun getData() {
         val doc: Document = Jsoup.connect(BASE_URL).get()
@@ -41,7 +41,7 @@ class MovieViewModel(
                     movieRepository.getTitleSoon(element),
                     movieRepository.getPosterUrlSoon(element),
                     movieRepository.getDateSoon(element),
-                    movieRepository.getDetailPosterUrlSoon(element)
+                    movieRepository.getMovieUrlSoon(element)
                 )
             )
         }
@@ -55,7 +55,7 @@ class MovieViewModel(
                 Premiere(
                     movieRepository.getTitlePremiere(element),
                     movieRepository.getPosterUrlPremiere(element),
-                    movieRepository.getDetailPosterUrlPremiere(element),
+                    movieRepository.getMovieUrlPremiere(element),
                     movieRepository.getAgePremiere(element)
                 )
             )
