@@ -13,6 +13,9 @@ import com.fara.nearbymovies.databinding.FragmentPremiereBinding
 import com.fara.nearbymovies.ui.MovieActivity
 import com.fara.nearbymovies.viewmodel.MovieViewModel
 import com.fara.nearbymovies.viewmodel.SoonViewModel
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 
 class PremiereFragment : Fragment(R.layout.fragment_premiere) {
 
@@ -44,10 +47,14 @@ class PremiereFragment : Fragment(R.layout.fragment_premiere) {
         }
 
         movieViewModel.premiereLiveData.observe(viewLifecycleOwner, {
-            premiereAdapter.differ.submitList(it)
+            GlobalScope.launch(Dispatchers.Unconfined) {
+                premiereAdapter.differ.submitList(it)
+            }
         })
         soonViewModel.soonLiveData.observe(viewLifecycleOwner, {
-            soonAdapter.differ.submitList(it)
+            GlobalScope.launch(Dispatchers.Unconfined) {
+                soonAdapter.differ.submitList(it)
+            }
         })
 
         return bind.root

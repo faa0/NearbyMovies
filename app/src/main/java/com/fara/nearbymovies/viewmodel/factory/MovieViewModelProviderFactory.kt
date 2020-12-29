@@ -1,8 +1,9 @@
-package com.fara.nearbymovies.viewmodel
+package com.fara.nearbymovies.viewmodel.factory
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.fara.nearbymovies.repository.MovieRepository
+import com.fara.nearbymovies.viewmodel.MovieViewModel
 
 @Suppress("UNCHECKED_CAST")
 class MovieViewModelProviderFactory(

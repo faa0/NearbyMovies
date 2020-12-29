@@ -59,6 +59,7 @@ class DetailFragment : Fragment(R.layout.fragment_detail) {
                     country = getCountry()
                     genre = getGenre()
                     background = getBackground()
+                    println("I'm working in thread ${Thread.currentThread().name}")
                 }
             }
         }
@@ -66,11 +67,21 @@ class DetailFragment : Fragment(R.layout.fragment_detail) {
 
     private fun setDataToView(it: Premiere) {
         GlobalScope.launch(Dispatchers.Main) {
-            delay(2000)
+            delay(3000)
             bind.apply {
                 tvDesc.text = description
-                tvYear.text = year
-                tvCountry.text = country
+                when {
+                    year.isNotEmpty() -> {
+                        tvYear.text = year
+                        ivIconYear.visibility = View.VISIBLE
+                    }
+                }
+                when {
+                    country.isNotEmpty() -> {
+                        tvCountry.text = country
+                        ivIconCountry.visibility = View.VISIBLE
+                    }
+                }
                 tvGenre.text = genre
                 ivBackground.load(background) {
                     transformations(
@@ -90,6 +101,13 @@ class DetailFragment : Fragment(R.layout.fragment_detail) {
                         ivIconAge.visibility = View.VISIBLE
                     }
                 }
+                when {
+                    videoUrl.isNotEmpty() -> {
+                        btnPlayVideo.visibility = View.VISIBLE
+                    }
+                }
+                progressBar.visibility = View.GONE
+                println("I'm working in thread ${Thread.currentThread().name}")
             }
         }
     }
