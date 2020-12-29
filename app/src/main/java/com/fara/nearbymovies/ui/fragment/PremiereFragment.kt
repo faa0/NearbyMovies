@@ -5,34 +5,48 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.navigation.fragment.findNavController
 import com.fara.nearbymovies.R
 import com.fara.nearbymovies.adapter.PremiereAdapter
 import com.fara.nearbymovies.adapter.SoonAdapter
 import com.fara.nearbymovies.databinding.FragmentPremiereBinding
 import com.fara.nearbymovies.ui.MovieActivity
 import com.fara.nearbymovies.viewmodel.MovieViewModel
+import com.fara.nearbymovies.viewmodel.SoonViewModel
 
 class PremiereFragment : Fragment(R.layout.fragment_premiere) {
 
     private lateinit var bind: FragmentPremiereBinding
-    private lateinit var viewModel: MovieViewModel
+    private lateinit var soonViewModel: SoonViewModel
+    private lateinit var movieViewModel: MovieViewModel
     private lateinit var premiereAdapter: PremiereAdapter
     private lateinit var soonAdapter: SoonAdapter
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
-        savedInstanceState: Bundle?
+        savedInstanceState: Bundle?,
     ): View {
         bind = FragmentPremiereBinding.inflate(layoutInflater)
-        viewModel = (activity as MovieActivity).viewModel
+        movieViewModel = (activity as MovieActivity).movieViewModel
+        soonViewModel = (activity as MovieActivity).soonViewModel
         setupSoonRecyclerView()
         setupPremiereRecyclerView()
 
-        viewModel.premiereLiveData.observe(viewLifecycleOwner, {
+        premiereAdapter.setOnItemClickListener {
+            val bundle = Bundle().apply {
+                putSerializable("premiere", it)
+            }
+            findNavController().navigate(
+                R.id.action_premiereFragment_to_detailFragment,
+                bundle
+            )
+        }
+
+        movieViewModel.premiereLiveData.observe(viewLifecycleOwner, {
             premiereAdapter.differ.submitList(it)
         })
-        viewModel.soonLiveData.observe(viewLifecycleOwner, {
+        soonViewModel.soonLiveData.observe(viewLifecycleOwner, {
             soonAdapter.differ.submitList(it)
         })
 

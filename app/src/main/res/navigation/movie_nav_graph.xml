@@ -19,5 +19,9 @@
     <fragment
         android:id="@+id/detailFragment"
         android:name="com.fara.nearbymovies.ui.fragment.DetailFragment"
-        android:label="DetailFragment" />
+        android:label="DetailFragment">
+        <argument
+            android:name="premiere"
+            app:argType="com.fara.nearbymovies.entity.Premiere" />
+    </fragment>
 </navigation>

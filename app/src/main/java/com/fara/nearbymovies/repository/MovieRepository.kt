@@ -6,29 +6,6 @@ import org.jsoup.nodes.Element
 
 class MovieRepository : ViewModel() {
 
-    fun getTitleSoon(element: Element): String {
-        return element.select("div.on-screen-soon")
-            .select("div.on-screen-soon__title")
-            .text()
-    }
-
-    fun getPosterUrlSoon(element: Element): String {
-        return (BASE_URL + element.select("div.poster-small")
-            .select("img")
-            .attr("src"))
-    }
-
-    fun getDateSoon(element: Element): String {
-        return element.select("div.on-screen-soon")
-            .select("div.on-screen-soon__date")
-            .text()
-    }
-
-    fun getDetailPosterUrlSoon(element: Element): String {
-        return (BASE_URL + element.select("a")
-            .attr("href"))
-    }
-
     fun getTitlePremiere(element: Element): String {
         return element.select("img.poster__img")
             .attr("alt")
@@ -41,7 +18,7 @@ class MovieRepository : ViewModel() {
             .attr("src"))
     }
 
-    fun getDetailPosterUrlPremiere(element: Element): String {
+    fun getMovieUrlPremiere(element: Element): String {
         return element.select("a")
             .attr("href")
     }
