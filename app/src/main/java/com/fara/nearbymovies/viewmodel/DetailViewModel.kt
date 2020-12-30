@@ -13,6 +13,18 @@ class DetailViewModel(
 
     val premiereLiveData = MutableLiveData<Premiere>()
 
+    fun getListOfTimes(): List<String> {
+        val url = premiereLiveData.value?.movie_url
+        val doc: Document = Jsoup.connect(url).get()
+        return detailRepository.getListOfTimes(doc)
+    }
+
+    fun getListOfSessions(): List<String> {
+        val url = premiereLiveData.value?.movie_url
+        val doc: Document = Jsoup.connect(url).get()
+        return detailRepository.getListOfSessions(doc)
+    }
+
     fun getGenre(): String {
         val url = premiereLiveData.value?.movie_url
         val doc: Document = Jsoup.connect(url).get()

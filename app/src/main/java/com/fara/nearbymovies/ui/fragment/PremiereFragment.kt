@@ -36,6 +36,19 @@ class PremiereFragment : Fragment(R.layout.fragment_premiere) {
         setupSoonRecyclerView()
         setupPremiereRecyclerView()
 
+        GlobalScope.launch(Dispatchers.IO) {
+            soonViewModel.setDataToLiveData()
+            movieViewModel.setDataToLiveData()
+            println("I'm working in thread ${Thread.currentThread().name}")
+        }
+
+        soonViewModel.soonLiveData.observe(viewLifecycleOwner, {
+            soonAdapter.differ.submitList(it)
+        })
+        movieViewModel.premiereLiveData.observe(viewLifecycleOwner, {
+            premiereAdapter.differ.submitList(it)
+        })
+
         premiereAdapter.setOnItemClickListener {
             val bundle = Bundle().apply {
                 putSerializable("premiere", it)
@@ -45,17 +58,6 @@ class PremiereFragment : Fragment(R.layout.fragment_premiere) {
                 bundle
             )
         }
-
-        movieViewModel.premiereLiveData.observe(viewLifecycleOwner, {
-            GlobalScope.launch(Dispatchers.Unconfined) {
-                premiereAdapter.differ.submitList(it)
-            }
-        })
-        soonViewModel.soonLiveData.observe(viewLifecycleOwner, {
-            GlobalScope.launch(Dispatchers.Unconfined) {
-                soonAdapter.differ.submitList(it)
-            }
-        })
 
         return bind.root
     }

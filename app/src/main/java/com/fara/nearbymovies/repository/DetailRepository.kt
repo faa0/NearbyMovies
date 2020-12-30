@@ -6,6 +6,25 @@ import org.jsoup.nodes.Document
 
 class DetailRepository : ViewModel() {
 
+    fun getListOfTimes(doc: Document): List<String> {
+        val listOfTimes = mutableListOf<String>()
+        for (i in getListOfSessions(doc).indices) {
+            val elements = doc.getElementsByClass("session__block")[i]
+            val time = elements.select("div.session__schedule").text()
+            listOfTimes.add(time)
+        }
+        return listOfTimes
+    }
+
+    fun getListOfSessions(doc: Document): List<String> {
+        val elements = doc.getElementsByClass("session__block")
+        val listOfSessions = mutableListOf<String>()
+        for (e in elements) {
+            listOfSessions += e.select("div.session__type").text()
+        }
+        return listOfSessions
+    }
+
     fun getGenre(doc: Document): String {
         return doc.getElementsByClass("movie__info")
             .select("div.movie__short-description")
