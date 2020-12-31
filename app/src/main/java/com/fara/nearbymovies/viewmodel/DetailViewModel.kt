@@ -3,6 +3,7 @@ package com.fara.nearbymovies.viewmodel
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.fara.nearbymovies.entity.Premiere
+import com.fara.nearbymovies.entity.Session
 import com.fara.nearbymovies.repository.DetailRepository
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
@@ -13,16 +14,10 @@ class DetailViewModel(
 
     val premiereLiveData = MutableLiveData<Premiere>()
 
-    fun getListOfTimes(): List<String> {
+    fun getSchedule(): MutableList<Session> {
         val url = premiereLiveData.value?.movie_url
         val doc: Document = Jsoup.connect(url).get()
-        return detailRepository.getListOfTimes(doc)
-    }
-
-    fun getListOfSessions(): List<String> {
-        val url = premiereLiveData.value?.movie_url
-        val doc: Document = Jsoup.connect(url).get()
-        return detailRepository.getListOfSessions(doc)
+        return detailRepository.getSchedule(doc)
     }
 
     fun getGenre(): String {

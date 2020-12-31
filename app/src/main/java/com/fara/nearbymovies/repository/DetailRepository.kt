@@ -1,22 +1,34 @@
 package com.fara.nearbymovies.repository
 
 import androidx.lifecycle.ViewModel
+import com.fara.nearbymovies.entity.Session
 import com.fara.nearbymovies.utils.Constants.Companion.BASE_URL
 import org.jsoup.nodes.Document
 
 class DetailRepository : ViewModel() {
 
-    fun getListOfTimes(doc: Document): List<String> {
+    fun getSchedule(doc: Document): MutableList<Session> {
+        val listOfSessions = mutableListOf<Session>()
+        for (i in getListOfSessions(doc).indices) {
+            listOfSessions += Session(getListOfSessions(doc)[i], getListOfTimes(doc)[i])
+        }
+        return listOfSessions
+    }
+
+    private fun getListOfTimes(doc: Document): List<String> {
         val listOfTimes = mutableListOf<String>()
         for (i in getListOfSessions(doc).indices) {
             val elements = doc.getElementsByClass("session__block")[i]
-            val time = elements.select("div.session__schedule").text()
-            listOfTimes.add(time)
+            listOfTimes += elements.select("div.session__schedule").text()
+                //need to delete space only
+                .replace("грн VIP ", "грнVIP\n")
+                .replace("грн ", "грн\n")
+                .replace("грнVIP", "грн VIP")
         }
         return listOfTimes
     }
 
-    fun getListOfSessions(doc: Document): List<String> {
+    private fun getListOfSessions(doc: Document): List<String> {
         val elements = doc.getElementsByClass("session__block")
         val listOfSessions = mutableListOf<String>()
         for (e in elements) {
