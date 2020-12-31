@@ -43,13 +43,12 @@ class DetailFragment : Fragment(R.layout.fragment_detail) {
     ): View {
         bind = FragmentDetailBinding.inflate(layoutInflater)
         detailViewModel = (activity as MovieActivity).detailViewModel
-        val premiere = args.premiere
-        detailViewModel.premiereLiveData.value = premiere
+        detailViewModel.premiereLiveData.value = args.premiere
 
         setupSessionRecyclerView()
 
         detailViewModel.premiereLiveData.observe(viewLifecycleOwner, {
-            lifecycleScope.launch(Dispatchers.IO) {
+            lifecycleScope.launch {
                 getDataFromNetwork()
                 println("I'm working in thread ${Thread.currentThread().name}")
 

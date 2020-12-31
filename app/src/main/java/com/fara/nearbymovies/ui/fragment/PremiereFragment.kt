@@ -13,9 +13,6 @@ import com.fara.nearbymovies.databinding.FragmentPremiereBinding
 import com.fara.nearbymovies.ui.MovieActivity
 import com.fara.nearbymovies.viewmodel.MovieViewModel
 import com.fara.nearbymovies.viewmodel.SoonViewModel
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.launch
 
 class PremiereFragment : Fragment(R.layout.fragment_premiere) {
 
@@ -35,12 +32,6 @@ class PremiereFragment : Fragment(R.layout.fragment_premiere) {
         soonViewModel = (activity as MovieActivity).soonViewModel
         setupSoonRecyclerView()
         setupPremiereRecyclerView()
-
-        GlobalScope.launch(Dispatchers.IO) {
-            soonViewModel.setDataToLiveData()
-            movieViewModel.setDataToLiveData()
-            println("I'm working in thread ${Thread.currentThread().name}")
-        }
 
         soonViewModel.soonLiveData.observe(viewLifecycleOwner, {
             soonAdapter.differ.submitList(it)

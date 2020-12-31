@@ -5,6 +5,8 @@ import androidx.lifecycle.ViewModel
 import com.fara.nearbymovies.entity.Premiere
 import com.fara.nearbymovies.repository.MovieRepository
 import com.fara.nearbymovies.utils.Constants.Companion.BASE_URL
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
 
@@ -12,10 +14,16 @@ class MovieViewModel(
     private val movieRepository: MovieRepository
 ) : ViewModel() {
 
+    init {
+        GlobalScope.launch {
+            setDataToLiveData()
+        }
+    }
+
     private val premiereList = mutableListOf<Premiere>()
     val premiereLiveData = MutableLiveData<List<Premiere>>()
 
-    fun setDataToLiveData() {
+    private fun setDataToLiveData() {
         val doc = Jsoup.connect(BASE_URL).get()
         premiereLiveData.postValue(setDataToPremiereList(doc))
     }
