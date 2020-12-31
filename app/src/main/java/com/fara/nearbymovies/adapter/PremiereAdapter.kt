@@ -16,7 +16,7 @@ class PremiereAdapter : RecyclerView.Adapter<PremiereAdapter.PremiereViewHolder>
 
     private val differCallback = object : DiffUtil.ItemCallback<Premiere>() {
         override fun areItemsTheSame(oldItem: Premiere, newItem: Premiere): Boolean {
-            return oldItem.title == newItem.title
+            return oldItem.movie_url == newItem.movie_url
         }
 
         override fun areContentsTheSame(oldItem: Premiere, newItem: Premiere): Boolean {

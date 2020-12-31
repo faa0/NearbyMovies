@@ -48,7 +48,7 @@ class DetailFragment : Fragment(R.layout.fragment_detail) {
         setupSessionRecyclerView()
 
         detailViewModel.premiereLiveData.observe(viewLifecycleOwner, {
-            lifecycleScope.launch {
+            lifecycleScope.launch(Dispatchers.IO) {
                 getDataFromNetwork()
                 println("I'm working in thread ${Thread.currentThread().name}")
 
