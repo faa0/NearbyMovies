@@ -7,34 +7,18 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.navArgs
 import coil.load
 import coil.transform.BlurTransformation
 import com.fara.nearbymovies.R
 import com.fara.nearbymovies.adapter.SessionAdapter
 import com.fara.nearbymovies.databinding.FragmentDetailBinding
-import com.fara.nearbymovies.entity.Premiere
-import com.fara.nearbymovies.entity.Session
-import com.fara.nearbymovies.ui.MovieActivity
-import com.fara.nearbymovies.viewmodel.DetailViewModel
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 
 class DetailFragment : Fragment(R.layout.fragment_detail) {
 
     private lateinit var bind: FragmentDetailBinding
     private lateinit var sessionAdapter: SessionAdapter
-    private lateinit var detailViewModel: DetailViewModel
     private val args: DetailFragmentArgs by navArgs()
-    private var background = ""
-    private var description = ""
-    private var videoUrl = ""
-    private var year = ""
-    private var country = ""
-    private var genre = ""
-    private var listOfSessions = mutableListOf<Session>()
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -42,80 +26,42 @@ class DetailFragment : Fragment(R.layout.fragment_detail) {
         savedInstanceState: Bundle?,
     ): View {
         bind = FragmentDetailBinding.inflate(layoutInflater)
-        detailViewModel = (activity as MovieActivity).detailViewModel
-        detailViewModel.premiereLiveData.value = args.premiere
+        val detail = args.detail
+        val premiere = args.premiere
 
         setupSessionRecyclerView()
 
-        detailViewModel.premiereLiveData.observe(viewLifecycleOwner, {
-            lifecycleScope.launch(Dispatchers.IO) {
-                getDataFromNetwork()
-                println("I'm working in thread ${Thread.currentThread().name}")
-
-                withContext(Dispatchers.Main) {
-                    setDataToViews(it)
-                    println("I'm working in thread ${Thread.currentThread().name}")
+        bind.apply {
+            detail.apply {
+                premiere.apply {
+                    ivBackground.load(background) {
+                        transformations(
+                            BlurTransformation(
+                                requireContext(),
+                                20F,
+                                2F
+                            )
+                        )
+                    }
+                    tvTitle.text = title
+                    ivPoster.load(poster_url)
+                    if (age.isNotEmpty()) {
+                        tvAge.text = age
+                        ivIconAge.visibility = View.VISIBLE
+                    }
+                    tvDesc.text = description
+                    tvYear.text = year
+                    tvCountry.text = country
+                    tvGenre.text = genre
+                    sessionAdapter.differ.submitList(schedule)
+                    if (video_url.isNotEmpty()) btnPlayVideo.visibility = View.VISIBLE
                 }
             }
-        })
+        }
 
-        onClickButtonPlayVideo()
+        onClickButtonPlayVideo(detail.video_url)
 
         return bind.root
-    }
-
-    private fun getDataFromNetwork() {
-        bind.apply {
-            detailViewModel.apply {
-                year = getYear()
-                country = getCountry()
-                genre = getGenre()
-                background = getBackground()
-                description = getDescription()
-                videoUrl = getVideoUrl()
-                listOfSessions = getSchedule()
-            }
-        }
-    }
-
-    private fun setDataToViews(it: Premiere) {
-        bind.apply {
-            tvDesc.text = description
-            tvGenre.text = genre
-            ivBackground.load(background) {
-                transformations(
-                    BlurTransformation(
-                        requireContext(),
-                        20F,
-                        2F
-                    )
-                )
-            }
-            tvTitle.text = it.title
-            ivPoster.load(it.poster_url)
-            when {
-                year.isNotEmpty() -> {
-                    tvYear.text = year
-                    ivIconYear.visibility = View.VISIBLE
-                }
-            }
-            when {
-                country.isNotEmpty() -> {
-                    tvCountry.text = country
-                    ivIconCountry.visibility = View.VISIBLE
-                }
-            }
-            when {
-                it.age.isNotEmpty() -> {
-                    tvAge.text = it.age
-                    tvAge.visibility = View.VISIBLE
-                    ivIconAge.visibility = View.VISIBLE
-                }
-            }
-            if (videoUrl.isNotEmpty()) btnPlayVideo.visibility = View.VISIBLE
-            sessionAdapter.differ.submitList(listOfSessions)
-            progressBar.visibility = View.GONE
-        }
     }
 
     private fun setupSessionRecyclerView() {
@@ -123,7 +69,7 @@ class DetailFragment : Fragment(R.layout.fragment_detail) {
         bind.rvSession.adapter = sessionAdapter
     }
 
-    private fun onClickButtonPlayVideo() {
+    private fun onClickButtonPlayVideo(videoUrl: String) {
         bind.btnPlayVideo.setOnClickListener {
             val url: Uri = Uri.parse(videoUrl)
             startActivity(Intent(Intent.ACTION_VIEW, url))

@@ -24,6 +24,9 @@
         android:label="DetailFragment"
         tools:layout="@layout/fragment_detail">
         <argument
+            android:name="detail"
+            app:argType="com.fara.nearbymovies.entity.Detail" />
+        <argument
             android:name="premiere"
             app:argType="com.fara.nearbymovies.entity.Premiere" />
     </fragment>

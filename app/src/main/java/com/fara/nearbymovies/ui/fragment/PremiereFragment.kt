@@ -39,10 +39,14 @@ class PremiereFragment : Fragment(R.layout.fragment_premiere) {
         movieViewModel.premiereLiveData.observe(viewLifecycleOwner, {
             premiereAdapter.differ.submitList(it)
         })
+        movieViewModel.detailLiveData.observe(viewLifecycleOwner, {
+            premiereAdapter.setDetailList(it)
+        })
 
-        premiereAdapter.setOnItemClickListener {
+        premiereAdapter.setOnItemClickListener { p1, p2 ->
             val bundle = Bundle().apply {
-                putSerializable("premiere", it)
+                putSerializable("detail", p1)
+                putSerializable("premiere", p2)
             }
             findNavController().navigate(
                 R.id.action_premiereFragment_to_detailFragment,
