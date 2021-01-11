@@ -43,16 +43,16 @@ class DetailFragment : Fragment(R.layout.fragment_detail) {
                         )
                     )
                 }
-                when (soon.title) {
-                    null -> tvTitle.text = premiere.title
+                when (soon?.title) {
+                    null -> tvTitle.text = premiere?.title
                     else -> tvTitle.text = soon.title
                 }
-                when (soon.poster_url) {
-                    null -> ivPoster.load(premiere.poster_url)
+                when (soon?.poster_url) {
+                    null -> ivPoster.load(premiere?.poster_url)
                     else -> ivPoster.load(soon.poster_url)
                 }
                 when {
-                    premiere.age.isNotEmpty() == true -> {
+                    premiere?.age?.isNotEmpty() == true -> {
                         tvAge.text = premiere.age
                         ivIconAge.visibility = View.VISIBLE
                     }
