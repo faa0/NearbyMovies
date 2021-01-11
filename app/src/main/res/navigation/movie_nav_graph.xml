@@ -28,6 +28,13 @@
             app:argType="com.fara.nearbymovies.entity.Detail" />
         <argument
             android:name="premiere"
-            app:argType="com.fara.nearbymovies.entity.Premiere" />
+            android:defaultValue="@null"
+            app:argType="com.fara.nearbymovies.entity.Premiere"
+            app:nullable="true" />
+        <argument
+            android:name="soon"
+            android:defaultValue="@null"
+            app:argType="com.fara.nearbymovies.entity.Soon"
+            app:nullable="true" />
     </fragment>
 </navigation>

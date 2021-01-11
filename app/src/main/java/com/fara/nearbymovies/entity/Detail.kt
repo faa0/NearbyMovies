@@ -9,5 +9,5 @@ data class Detail(
     val year: String,
     val country: String,
     val genre: String,
-    val schedule: List<Session>,
+    val schedule: List<Session>?,
 ) : Serializable

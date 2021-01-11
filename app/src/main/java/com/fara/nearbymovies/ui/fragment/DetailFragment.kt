@@ -28,34 +28,41 @@ class DetailFragment : Fragment(R.layout.fragment_detail) {
         bind = FragmentDetailBinding.inflate(layoutInflater)
         val detail = args.detail
         val premiere = args.premiere
+        val soon = args.soon
 
         setupSessionRecyclerView()
 
         bind.apply {
             detail.apply {
-                premiere.apply {
-                    ivBackground.load(background) {
-                        transformations(
-                            BlurTransformation(
-                                requireContext(),
-                                20F,
-                                2F
-                            )
+                ivBackground.load(background) {
+                    transformations(
+                        BlurTransformation(
+                            requireContext(),
+                            20F,
+                            2F
                         )
-                    }
-                    tvTitle.text = title
-                    ivPoster.load(poster_url)
-                    if (age.isNotEmpty()) {
-                        tvAge.text = age
+                    )
+                }
+                when (soon.title) {
+                    null -> tvTitle.text = premiere.title
+                    else -> tvTitle.text = soon.title
+                }
+                when (soon.poster_url) {
+                    null -> ivPoster.load(premiere.poster_url)
+                    else -> ivPoster.load(soon.poster_url)
+                }
+                when {
+                    premiere.age.isNotEmpty() == true -> {
+                        tvAge.text = premiere.age
                         ivIconAge.visibility = View.VISIBLE
                     }
-                    tvDesc.text = description
-                    tvYear.text = year
-                    tvCountry.text = country
-                    tvGenre.text = genre
-                    sessionAdapter.differ.submitList(schedule)
-                    if (video_url.isNotEmpty()) btnPlayVideo.visibility = View.VISIBLE
                 }
+                tvDesc.text = description
+                tvYear.text = year
+                tvCountry.text = country
+                tvGenre.text = genre
+                sessionAdapter.differ.submitList(schedule)
+                if (video_url.isNotEmpty()) btnPlayVideo.visibility = View.VISIBLE
             }
         }
 
