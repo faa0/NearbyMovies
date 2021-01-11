@@ -1,13 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <navigation xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/movie_nav_graph"
     app:startDestination="@id/premiereFragment">
 
     <fragment
         android:id="@+id/premiereFragment"
         android:name="com.fara.nearbymovies.ui.fragment.PremiereFragment"
-        android:label="PremiereFragment">
+        android:label="PremiereFragment"
+        tools:layout="@layout/fragment_premiere">
         <action
             android:id="@+id/action_premiereFragment_to_detailFragment"
             app:destination="@id/detailFragment"
@@ -19,7 +21,11 @@
     <fragment
         android:id="@+id/detailFragment"
         android:name="com.fara.nearbymovies.ui.fragment.DetailFragment"
-        android:label="DetailFragment">
+        android:label="DetailFragment"
+        tools:layout="@layout/fragment_detail">
+        <argument
+            android:name="detail"
+            app:argType="com.fara.nearbymovies.entity.Detail" />
         <argument
             android:name="premiere"
             app:argType="com.fara.nearbymovies.entity.Premiere" />

@@ -4,8 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/purple_500"
-    tools:ignore="Overdraw">
+    android:background="@color/purple_500">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
@@ -16,7 +15,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
-            android:text="СКОРО У КІНО"
+            android:text="@string/shown_in_the_cinema"
             android:textAllCaps="true"
             android:textColor="@color/teal_200"
             app:layout_constraintBottom_toTopOf="@+id/soonPager"
@@ -30,7 +29,7 @@
             android:layout_width="0dp"
             android:layout_height="200dp"
             android:layout_marginStart="8dp"
-            android:layout_marginTop="12dp"
+            android:layout_marginTop="8dp"
             android:layout_marginEnd="8dp"
             android:layout_marginBottom="8dp"
             app:layout_constraintEnd_toEndOf="parent"
@@ -44,7 +43,7 @@
             android:layout_marginStart="16dp"
             android:layout_marginTop="16dp"
             android:layout_marginEnd="16dp"
-            android:text="СЬОГОДНІ У КІНОТЕАТРІ "
+            android:text="@string/today_in_cinema"
             android:textAllCaps="true"
             android:textColor="@color/teal_200"
             app:layout_constraintEnd_toEndOf="parent"
@@ -58,6 +57,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
             android:layout_marginEnd="8dp"
+            android:overScrollMode="never"
             app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"

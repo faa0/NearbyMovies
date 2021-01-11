@@ -7,6 +7,7 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import coil.load
 import com.fara.nearbymovies.databinding.ItemPremiereBinding
+import com.fara.nearbymovies.entity.Detail
 import com.fara.nearbymovies.entity.Premiere
 
 class PremiereAdapter : RecyclerView.Adapter<PremiereAdapter.PremiereViewHolder>() {
@@ -16,7 +17,7 @@ class PremiereAdapter : RecyclerView.Adapter<PremiereAdapter.PremiereViewHolder>
 
     private val differCallback = object : DiffUtil.ItemCallback<Premiere>() {
         override fun areItemsTheSame(oldItem: Premiere, newItem: Premiere): Boolean {
-            return oldItem.title == newItem.title
+            return oldItem.movie_url == newItem.movie_url
         }
 
         override fun areContentsTheSame(oldItem: Premiere, newItem: Premiere): Boolean {
@@ -25,6 +26,7 @@ class PremiereAdapter : RecyclerView.Adapter<PremiereAdapter.PremiereViewHolder>
     }
 
     val differ = AsyncListDiffer(this, differCallback)
+    private var detailList = mutableListOf<Detail>()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) = PremiereViewHolder(
         ItemPremiereBinding.inflate(
@@ -41,16 +43,20 @@ class PremiereAdapter : RecyclerView.Adapter<PremiereAdapter.PremiereViewHolder>
             tvTitlePremiere.text = premiere.title
 
             layoutMain.setOnClickListener {
-                onItemClickListener?.let { it(premiere) }
+                onItemClickListener?.let { it(detailList[position], premiere) }
             }
         }
     }
 
     override fun getItemCount() = differ.currentList.size
 
-    private var onItemClickListener: ((Premiere) -> Unit)? = null
+    private var onItemClickListener: ((Detail, Premiere) -> Unit)? = null
 
-    fun setOnItemClickListener(listener: (Premiere) -> Unit) {
+    fun setDetailList(list: MutableList<Detail>) {
+        detailList = list
+    }
+
+    fun setOnItemClickListener(listener: (Detail, Premiere) -> Unit) {
         onItemClickListener = listener
     }
 }

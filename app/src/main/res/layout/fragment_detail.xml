@@ -30,20 +30,25 @@
             android:layout_marginEnd="16dp"
             android:fontFamily="@font/evolventa_regular"
             android:textColor="@android:color/white"
-            android:textSize="24sp"
+            android:textSize="22sp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@+id/ivPoster"
-            app:layout_constraintTop_toBottomOf="@+id/ivBackground" />
+            app:layout_constraintTop_toBottomOf="@+id/ivBackground"
+            tools:text="Harry Potter" />
 
         <TextView
             android:id="@+id/tvGenre"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:ellipsize="end"
+            android:ems="8"
             android:fontFamily="@font/evolventa_regular"
+            android:singleLine="true"
             android:textColor="@android:color/white"
             app:layout_constraintEnd_toEndOf="@+id/tvTitle"
             app:layout_constraintStart_toStartOf="@+id/tvTitle"
-            app:layout_constraintTop_toBottomOf="@+id/tvTitle" />
+            app:layout_constraintTop_toBottomOf="@+id/tvTitle"
+            tools:text="Adventure" />
 
         <TextView
             android:id="@+id/tvDesc"
@@ -55,7 +60,8 @@
             android:textColor="@color/light_blue"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/ivPoster" />
+            app:layout_constraintTop_toBottomOf="@+id/ivPoster"
+            tools:text="Bla-bla-bla" />
 
         <ImageView
             android:id="@+id/ivPoster"
@@ -87,7 +93,8 @@
             android:textColor="@android:color/white"
             app:layout_constraintBottom_toBottomOf="@+id/ivIconYear"
             app:layout_constraintStart_toEndOf="@+id/ivIconYear"
-            app:layout_constraintTop_toTopOf="@+id/ivIconYear" />
+            app:layout_constraintTop_toTopOf="@+id/ivIconYear"
+            tools:text="2021" />
 
         <ImageView
             android:id="@+id/ivIconCountry"
@@ -108,7 +115,8 @@
             android:textColor="@android:color/white"
             app:layout_constraintBottom_toBottomOf="@+id/ivIconCountry"
             app:layout_constraintStart_toEndOf="@+id/ivIconCountry"
-            app:layout_constraintTop_toTopOf="@+id/ivIconCountry" />
+            app:layout_constraintTop_toTopOf="@+id/ivIconCountry"
+            tools:text="Ukraine" />
 
         <ImageView
             android:id="@+id/ivIconAge"
@@ -116,7 +124,7 @@
             android:layout_height="wrap_content"
             android:layout_marginBottom="5dp"
             android:src="@drawable/ic_baseline_block_24"
-            android:visibility="gone"
+            android:visibility="invisible"
             app:layout_constraintBottom_toTopOf="@+id/ivIconYear"
             app:layout_constraintEnd_toEndOf="@+id/ivIconYear"
             app:layout_constraintStart_toStartOf="@+id/ivIconYear" />
@@ -128,133 +136,10 @@
             android:layout_marginStart="5dp"
             android:fontFamily="@font/evolventa_regular"
             android:textColor="@android:color/white"
-            android:visibility="gone"
             app:layout_constraintBottom_toBottomOf="@+id/ivIconAge"
             app:layout_constraintStart_toEndOf="@+id/ivIconAge"
-            app:layout_constraintTop_toTopOf="@+id/ivIconAge" />
-
-        <TextView
-            android:id="@+id/tvTitleSession"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
-            android:background="@color/purple_line"
-            android:fontFamily="@font/evolventa_regular"
-            android:padding="16dp"
-            android:textColor="@android:color/white"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/tvDesc" />
-
-        <TextView
-            android:id="@+id/tvTimeSession"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_margin="16dp"
-            android:fontFamily="@font/evolventa_regular"
-            android:lineSpacingExtra="8dp"
-            android:textColor="@color/teal_200"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/tvTitleSession"
-            app:layout_constraintVertical_bias="0.0" />
-
-        <TextView
-            android:id="@+id/tvPriceSession"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_margin="16dp"
-            android:fontFamily="@font/evolventa_regular"
-            android:lineSpacingExtra="8dp"
-            android:textColor="@color/light_blue"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.0"
-            app:layout_constraintStart_toEndOf="@id/tvTimeSession"
-            app:layout_constraintTop_toBottomOf="@+id/tvTitleSession"
-            app:layout_constraintVertical_bias="0.0" />
-
-        <TextView
-            android:id="@+id/tvTitleSession2"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
-            android:background="@color/purple_line"
-            android:fontFamily="@font/evolventa_regular"
-            android:padding="16dp"
-            android:textColor="@android:color/white"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/tvTimeSession" />
-
-        <TextView
-            android:id="@+id/tvTimeSession2"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_margin="16dp"
-            android:layout_marginBottom="16dp"
-            android:fontFamily="@font/evolventa_regular"
-            android:lineSpacingExtra="8dp"
-            android:textColor="@color/teal_200"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/tvTitleSession2"
-            app:layout_constraintVertical_bias="0.0" />
-
-        <TextView
-            android:id="@+id/tvPriceSession2"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_margin="16dp"
-            android:fontFamily="@font/evolventa_regular"
-            android:lineSpacingExtra="8dp"
-            android:textColor="@color/light_blue"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.0"
-            app:layout_constraintStart_toEndOf="@id/tvTimeSession"
-            app:layout_constraintTop_toBottomOf="@+id/tvTitleSession2"
-            app:layout_constraintVertical_bias="0.0" />
-
-        <TextView
-            android:id="@+id/tvTitleSession3"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
-            android:background="@color/purple_line"
-            android:fontFamily="@font/evolventa_regular"
-            android:padding="16dp"
-            android:textColor="@android:color/white"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/tvTimeSession2" />
-
-        <TextView
-            android:id="@+id/tvTimeSession3"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_margin="16dp"
-            android:layout_marginBottom="16dp"
-            android:fontFamily="@font/evolventa_regular"
-            android:lineSpacingExtra="8dp"
-            android:textColor="@color/teal_200"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/tvTitleSession3" />
-
-        <TextView
-            android:id="@+id/tvPriceSession3"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_margin="16dp"
-            android:fontFamily="@font/evolventa_regular"
-            android:lineSpacingExtra="8dp"
-            android:textColor="@color/light_blue"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.0"
-            app:layout_constraintStart_toEndOf="@id/tvTimeSession"
-            app:layout_constraintTop_toBottomOf="@+id/tvTitleSession3" />
+            app:layout_constraintTop_toTopOf="@+id/ivIconAge"
+            tools:text="21+" />
 
         <com.google.android.material.floatingactionbutton.FloatingActionButton
             android:id="@+id/btnPlayVideo"
@@ -262,10 +147,25 @@
             android:layout_height="wrap_content"
             android:clickable="true"
             android:focusable="true"
+            android:visibility="gone"
             app:layout_constraintBottom_toBottomOf="@+id/ivBackground"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:srcCompat="@drawable/ic_baseline_play_arrow_24" />
+            app:srcCompat="@drawable/ic_baseline_play_arrow_24"
+            tools:visibility="visible" />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rvSession"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginBottom="8dp"
+            android:overScrollMode="never"
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/tvDesc"
+            tools:listitem="@layout/item_session" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 </ScrollView>

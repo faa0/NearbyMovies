@@ -2,64 +2,69 @@ package com.fara.nearbymovies.viewmodel
 
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import com.fara.nearbymovies.entity.Detail
 import com.fara.nearbymovies.entity.Premiere
-import com.fara.nearbymovies.entity.Soon
 import com.fara.nearbymovies.repository.MovieRepository
 import com.fara.nearbymovies.utils.Constants.Companion.BASE_URL
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
-import org.jsoup.select.Elements
 
 class MovieViewModel(
-    private val movieRepository: MovieRepository
+    private val movieRepository: MovieRepository,
 ) : ViewModel() {
-
-    private val soonList = mutableListOf<Soon>()
-    private val premiereList = mutableListOf<Premiere>()
-    val soonLiveData = MutableLiveData<List<Soon>>()
-    val premiereLiveData = MutableLiveData<List<Premiere>>()
 
     init {
         GlobalScope.launch {
-            getData()
+            setDataToLiveData()
         }
     }
 
-    private fun getData() {
-        val doc: Document = Jsoup.connect(BASE_URL).get()
+    private val premiereList = mutableListOf<Premiere>()
+    private val urlList = mutableListOf<String>()
+    private val detailList = mutableListOf<Detail>()
+    val premiereLiveData = MutableLiveData<MutableList<Premiere>>()
+    val detailLiveData = MutableLiveData<MutableList<Detail>>()
+
+    private fun setDataToLiveData() {
+        val doc = Jsoup.connect(BASE_URL).get()
         premiereLiveData.postValue(setDataToPremiereList(doc))
-        soonLiveData.postValue(setDataToSoonList(doc))
+        detailLiveData.postValue(setDetailToList())
     }
 
-    private fun setDataToSoonList(doc: Document): List<Soon> {
-        val soon: Elements = doc.getElementsByClass("on-screen-soon")
-        for (element in soon) {
-            soonList.add(
-                Soon(
-                    movieRepository.getTitleSoon(element),
-                    movieRepository.getPosterUrlSoon(element),
-                    movieRepository.getDateSoon(element),
-                    movieRepository.getMovieUrlSoon(element)
+    private fun setDetailToList(): MutableList<Detail> {
+        for (i in setDataToUrlList()) {
+            val doc = Jsoup.connect(i).get()
+            movieRepository.apply {
+                detailList += Detail(
+                    getBackground(doc),
+                    getDescription(doc),
+                    getVideoUrl(doc),
+                    getYear(doc),
+                    getCountry(doc),
+                    getGenre(doc),
+                    getSchedule(doc)
                 )
-            )
+            }
         }
-        return soonList
+        return detailList
     }
 
-    private fun setDataToPremiereList(doc: Document): List<Premiere> {
-        val premiere: Elements = doc.getElementsByClass("poster")
-        for (element in premiere) {
-            premiereList.add(
-                Premiere(
-                    movieRepository.getTitlePremiere(element),
-                    movieRepository.getPosterUrlPremiere(element),
-                    movieRepository.getMovieUrlPremiere(element),
-                    movieRepository.getAgePremiere(element)
-                )
+    private fun setDataToUrlList(): List<String> {
+        for (i in premiereList) urlList.add(i.movie_url)
+        return urlList
+    }
+
+    private fun setDataToPremiereList(doc: Document): MutableList<Premiere> {
+        val premiere = doc.getElementsByClass("poster")
+        for (element in premiere)
+            premiereList += Premiere(
+                movieRepository.getTitlePremiere(element),
+                movieRepository.getPosterUrlPremiere(element),
+                movieRepository.getMovieUrlPremiere(element),
+                movieRepository.getAgePremiere(element)
             )
-        }
         return premiereList
     }
 }

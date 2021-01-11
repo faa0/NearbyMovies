@@ -16,7 +16,7 @@ class SoonAdapter : RecyclerView.Adapter<SoonAdapter.SoonViewHolder>() {
 
     private val differCallback = object : DiffUtil.ItemCallback<Soon>() {
         override fun areItemsTheSame(oldItem: Soon, newItem: Soon): Boolean {
-            return oldItem.title == newItem.title
+            return oldItem.movie_url == newItem.movie_url
         }
 
         override fun areContentsTheSame(oldItem: Soon, newItem: Soon): Boolean {

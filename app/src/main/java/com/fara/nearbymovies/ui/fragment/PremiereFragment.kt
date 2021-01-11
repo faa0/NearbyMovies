@@ -12,40 +12,47 @@ import com.fara.nearbymovies.adapter.SoonAdapter
 import com.fara.nearbymovies.databinding.FragmentPremiereBinding
 import com.fara.nearbymovies.ui.MovieActivity
 import com.fara.nearbymovies.viewmodel.MovieViewModel
+import com.fara.nearbymovies.viewmodel.SoonViewModel
 
 class PremiereFragment : Fragment(R.layout.fragment_premiere) {
 
     private lateinit var bind: FragmentPremiereBinding
-    private lateinit var viewModel: MovieViewModel
+    private lateinit var soonViewModel: SoonViewModel
+    private lateinit var movieViewModel: MovieViewModel
     private lateinit var premiereAdapter: PremiereAdapter
     private lateinit var soonAdapter: SoonAdapter
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
-        savedInstanceState: Bundle?
+        savedInstanceState: Bundle?,
     ): View {
         bind = FragmentPremiereBinding.inflate(layoutInflater)
-        viewModel = (activity as MovieActivity).viewModel
+        movieViewModel = (activity as MovieActivity).movieViewModel
+        soonViewModel = (activity as MovieActivity).soonViewModel
         setupSoonRecyclerView()
         setupPremiereRecyclerView()
 
-        premiereAdapter.setOnItemClickListener {
+        soonViewModel.soonLiveData.observe(viewLifecycleOwner, {
+            soonAdapter.differ.submitList(it)
+        })
+        movieViewModel.premiereLiveData.observe(viewLifecycleOwner, {
+            premiereAdapter.differ.submitList(it)
+        })
+        movieViewModel.detailLiveData.observe(viewLifecycleOwner, {
+            premiereAdapter.setDetailList(it)
+        })
+
+        premiereAdapter.setOnItemClickListener { p1, p2 ->
             val bundle = Bundle().apply {
-                putSerializable("premiere", it)
+                putSerializable("detail", p1)
+                putSerializable("premiere", p2)
             }
             findNavController().navigate(
                 R.id.action_premiereFragment_to_detailFragment,
                 bundle
             )
         }
-
-        viewModel.premiereLiveData.observe(viewLifecycleOwner, {
-            premiereAdapter.differ.submitList(it)
-        })
-        viewModel.soonLiveData.observe(viewLifecycleOwner, {
-            soonAdapter.differ.submitList(it)
-        })
 
         return bind.root
     }
