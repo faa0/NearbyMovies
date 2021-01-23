@@ -8,11 +8,13 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.navArgs
-import coil.load
-import coil.transform.BlurTransformation
+import com.bumptech.glide.Glide
+import com.bumptech.glide.load.engine.DiskCacheStrategy
+import com.bumptech.glide.request.RequestOptions.bitmapTransform
 import com.fara.nearbymovies.R
 import com.fara.nearbymovies.adapter.SessionAdapter
 import com.fara.nearbymovies.databinding.FragmentDetailBinding
+import jp.wasabeef.glide.transformations.BlurTransformation
 
 class DetailFragment : Fragment(R.layout.fragment_detail) {
 
@@ -34,22 +36,27 @@ class DetailFragment : Fragment(R.layout.fragment_detail) {
 
         bind.apply {
             detail.apply {
-                ivBackground.load(background) {
-                    transformations(
-                        BlurTransformation(
-                            requireContext(),
-                            20F,
-                            2F
-                        )
-                    )
-                }
+                Glide
+                    .with(ivBackground.context)
+                    .load(background)
+                    .apply(bitmapTransform(BlurTransformation(20, 1)))
+                    .diskCacheStrategy(DiskCacheStrategy.ALL)
+                    .into(ivBackground)
                 when (soon?.title) {
                     null -> tvTitle.text = premiere?.title
                     else -> tvTitle.text = soon.title
                 }
                 when (soon?.poster_url) {
-                    null -> ivPoster.load(premiere?.poster_url)
-                    else -> ivPoster.load(soon.poster_url)
+                    null -> Glide
+                        .with(ivPoster.context)
+                        .load(premiere?.poster_url)
+                        .diskCacheStrategy(DiskCacheStrategy.ALL)
+                        .into(ivPoster)
+                    else -> Glide
+                        .with(ivPoster.context)
+                        .load(soon.poster_url)
+                        .diskCacheStrategy(DiskCacheStrategy.ALL)
+                        .into(ivPoster)
                 }
                 when {
                     premiere?.age?.isNotEmpty() == true -> {

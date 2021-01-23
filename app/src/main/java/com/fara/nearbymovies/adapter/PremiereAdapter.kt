@@ -5,7 +5,8 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.AsyncListDiffer
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
-import coil.load
+import com.bumptech.glide.Glide
+import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.fara.nearbymovies.databinding.ItemPremiereBinding
 import com.fara.nearbymovies.entity.Detail
 import com.fara.nearbymovies.entity.Premiere
@@ -39,7 +40,12 @@ class PremiereAdapter : RecyclerView.Adapter<PremiereAdapter.PremiereViewHolder>
     override fun onBindViewHolder(holder: PremiereAdapter.PremiereViewHolder, position: Int) {
         val premiere = differ.currentList[position]
         holder.bind.apply {
-            ivPremiere.load(premiere.poster_url)
+            Glide
+                .with(ivPremiere.context)
+                .load(premiere.poster_url)
+                .diskCacheStrategy(
+                    DiskCacheStrategy.ALL)
+                .into(ivPremiere)
             tvTitlePremiere.text = premiere.title
 
             layoutMain.setOnClickListener {

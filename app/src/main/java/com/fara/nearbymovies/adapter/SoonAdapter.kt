@@ -5,7 +5,8 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.AsyncListDiffer
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
-import coil.load
+import com.bumptech.glide.Glide
+import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.fara.nearbymovies.databinding.ItemSoonBinding
 import com.fara.nearbymovies.entity.Detail
 import com.fara.nearbymovies.entity.Soon
@@ -39,7 +40,11 @@ class SoonAdapter : RecyclerView.Adapter<SoonAdapter.SoonViewHolder>() {
     override fun onBindViewHolder(holder: SoonAdapter.SoonViewHolder, position: Int) {
         val soon = differ.currentList[position]
         holder.bind.apply {
-            ivSoon.load(soon.poster_url)
+            Glide
+                .with(ivSoon.context)
+                .load(soon.poster_url)
+                .diskCacheStrategy(DiskCacheStrategy.ALL)
+                .into(ivSoon)
             tvTitle.text = soon.title
             tvDateSoon.text = soon.date
 
