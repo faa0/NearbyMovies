@@ -27,7 +27,7 @@ class SoonAdapter : RecyclerView.Adapter<SoonAdapter.SoonViewHolder>() {
     }
 
     val differ = AsyncListDiffer(this, differCallback)
-    private var detailList = mutableListOf<Detail>()
+    private lateinit var detail: Detail
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) = SoonViewHolder(
         ItemSoonBinding.inflate(
@@ -49,7 +49,7 @@ class SoonAdapter : RecyclerView.Adapter<SoonAdapter.SoonViewHolder>() {
             tvDateSoon.text = soon.date
 
             layoutMain.setOnClickListener {
-                onItemClickListener?.let { it(detailList[position], soon) }
+                onItemClickListener?.let { it(detail, soon) }
             }
         }
     }
@@ -58,8 +58,8 @@ class SoonAdapter : RecyclerView.Adapter<SoonAdapter.SoonViewHolder>() {
 
     private var onItemClickListener: ((Detail, Soon) -> Unit)? = null
 
-    fun setDetailList(list: MutableList<Detail>) {
-        detailList = list
+    fun setDetailMovie(detail: Detail) {
+        this.detail = detail
     }
 
     fun setOnItemClickListener(listener: (Detail, Soon) -> Unit) {

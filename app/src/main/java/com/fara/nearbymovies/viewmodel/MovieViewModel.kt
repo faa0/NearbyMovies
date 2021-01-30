@@ -52,7 +52,7 @@ class MovieViewModel(
     }
 
     private fun setDataToUrlList(): List<String> {
-        for (i in premiereList) urlList.add(i.movie_url)
+        for (i in premiereList) i.movie_url.let { urlList.add(it) }
         return urlList
     }
 

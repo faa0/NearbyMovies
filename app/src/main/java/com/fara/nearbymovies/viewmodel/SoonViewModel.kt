@@ -21,38 +21,41 @@ class SoonViewModel(
         }
     }
 
+    private lateinit var detail: Detail
     private val soonList = mutableListOf<Soon>()
     private val urlList = mutableListOf<String>()
-    private val detailList = mutableListOf<Detail>()
     val soonLiveData = MutableLiveData<List<Soon>>()
-    val detailLiveData = MutableLiveData<MutableList<Detail>>()
+    val detailLiveData = MutableLiveData<Detail>()
+    var position = 0
+
+    fun setDataToDetailLiveData() {
+        detailLiveData.postValue(setDetailMovie())
+    }
 
     private fun setDataToLiveData() {
         val doc = Jsoup.connect(BASE_URL).get()
         soonLiveData.postValue(setDataToSoonList(doc))
-        detailLiveData.postValue(setDetailToList())
+        setDataToDetailLiveData()
     }
 
-    private fun setDetailToList(): MutableList<Detail> {
-        for (i in setDataToUrlList()) {
-            val doc = Jsoup.connect(i).get()
-            soonRepository.apply {
-                detailList += Detail(
-                    getBackground(doc),
-                    getDescription(doc),
-                    getVideoUrl(doc),
-                    getYear(doc),
-                    getCountry(doc),
-                    getGenre(doc),
-                    null
-                )
-            }
+    private fun setDetailMovie(): Detail {
+        val doc = Jsoup.connect(setDataToUrlList()[position]).get()
+        soonRepository.apply {
+            detail = Detail(
+                getBackground(doc),
+                getDescription(doc),
+                getVideoUrl(doc),
+                getYear(doc),
+                getCountry(doc),
+                getGenre(doc),
+                null
+            )
         }
-        return detailList
+        return detail
     }
 
     private fun setDataToUrlList(): List<String> {
-        for (i in soonList) urlList.add(i.movie_url)
+        for (i in soonList) i.movie_url.let { urlList.add(it) }
         return urlList
     }
 
