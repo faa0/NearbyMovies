@@ -16,7 +16,6 @@ import com.fara.nearbymovies.databinding.FragmentPremiereBinding
 import com.fara.nearbymovies.entity.Soon
 import com.fara.nearbymovies.ui.MovieActivity
 import com.fara.nearbymovies.viewmodel.MovieViewModel
-import com.fara.nearbymovies.viewmodel.SoonViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
@@ -24,7 +23,6 @@ import kotlinx.coroutines.launch
 class PremiereFragment : Fragment(R.layout.fragment_premiere) {
 
     private lateinit var bind: FragmentPremiereBinding
-    private lateinit var soonViewModel: SoonViewModel
     private lateinit var movieViewModel: MovieViewModel
     private lateinit var premiereAdapter: PremiereAdapter
     private lateinit var soonAdapter: SoonAdapter
@@ -40,23 +38,19 @@ class PremiereFragment : Fragment(R.layout.fragment_premiere) {
     ): View {
         bind = FragmentPremiereBinding.inflate(layoutInflater)
         movieViewModel = (activity as MovieActivity).movieViewModel
-        soonViewModel = (activity as MovieActivity).soonViewModel
         setupSoonRecyclerView()
         setupPremiereRecyclerView()
 
         state = args.state
 
-        soonViewModel.apply {
+        movieViewModel.apply {
             soonLiveData.observe(viewLifecycleOwner, {
                 soonAdapter.differ.submitList(it)
                 soonList = it
             })
-            detailLiveData.observe(viewLifecycleOwner, {
+            detailLiveDataSoon.observe(viewLifecycleOwner, {
                 soonAdapter.setDetailMovie(it)
             })
-        }
-
-        movieViewModel.apply {
             premiereLiveData.observe(viewLifecycleOwner, {
                 premiereAdapter.differ.submitList(it)
             })
@@ -69,17 +63,17 @@ class PremiereFragment : Fragment(R.layout.fragment_premiere) {
             override fun onPageSelected(position: Int) {
                 super.onPageSelected(position)
                 when {
-                    args.position >= 0 && !state -> positionOfSoonPager = position
-                    args.position == 0 && state -> {
+                    args.positionOfSoonPager >= 0 && !state -> positionOfSoonPager = position
+                    args.positionOfSoonPager == 0 && state -> {
                         positionOfSoonPager = position
                         state = false
                     }
-                    else -> positionOfSoonPager = args.position
+                    else -> positionOfSoonPager = args.positionOfSoonPager
                 }
 
-                soonViewModel.position = positionOfSoonPager
+                movieViewModel.position = positionOfSoonPager
                 GlobalScope.launch(Dispatchers.IO) {
-                    soonViewModel.setDataToDetailLiveData()
+                    movieViewModel.setDataToDetailLiveData()
                 }
 
                 if (state) bind.soonPager.setCurrentItem(positionOfSoonPager, false)
@@ -101,7 +95,7 @@ class PremiereFragment : Fragment(R.layout.fragment_premiere) {
             val bundle = Bundle().apply {
                 putSerializable("detail", detail)
                 putSerializable("soon", soon)
-                putInt("position", positionOfSoonPager)
+                putInt("positionOfSoonPager", positionOfSoonPager)
             }
             findNavController().navigate(
                 R.id.action_premiereFragment_to_detailFragment,

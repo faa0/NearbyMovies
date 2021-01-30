@@ -18,7 +18,7 @@
             app:popEnterAnim="@anim/slide_in_left"
             app:popExitAnim="@anim/slide_out_right" />
         <argument
-            android:name="position"
+            android:name="positionOfSoonPager"
             android:defaultValue="0"
             app:argType="integer" />
         <argument
@@ -52,7 +52,7 @@
             app:popEnterAnim="@anim/slide_in_right"
             app:popExitAnim="@anim/slide_out_left" />
         <argument
-            android:name="position"
+            android:name="positionOfSoonPager"
             android:defaultValue="0"
             app:argType="integer" />
     </fragment>

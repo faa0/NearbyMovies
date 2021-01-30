@@ -2,6 +2,7 @@ package com.fara.nearbymovies.repository
 
 import androidx.lifecycle.ViewModel
 import com.fara.nearbymovies.entity.Session
+import com.fara.nearbymovies.utils.Constants
 import com.fara.nearbymovies.utils.Constants.Companion.BASE_URL
 import org.jsoup.nodes.Document
 import org.jsoup.nodes.Element
@@ -100,8 +101,20 @@ class MovieRepository : ViewModel() {
             .replace("постер", "").trim()
     }
 
+    fun getTitleSoon(element: Element): String {
+        return element.select("div.on-screen-soon")
+            .select("div.on-screen-soon__title")
+            .text()
+    }
+
     fun getPosterUrlPremiere(element: Element): String {
         return (BASE_URL + element.select("img.poster__img")
+            .attr("src"))
+    }
+
+    fun getPosterUrlSoon(element: Element): String {
+        return (Constants.BASE_URL + element.select("div.poster-small")
+            .select("img")
             .attr("src"))
     }
 
@@ -110,10 +123,21 @@ class MovieRepository : ViewModel() {
             .attr("href")
     }
 
+    fun getMovieUrlSoon(element: Element): String {
+        return (BASE_URL + element.select("a")
+            .attr("href"))
+    }
+
     fun getAgePremiere(element: Element): String {
         return element.select("div.poster__info")
             .select("a.poster__name")
             .select("span.age-limitation")
+            .text()
+    }
+
+    fun getDateSoon(element: Element): String {
+        return element.select("div.on-screen-soon")
+            .select("div.on-screen-soon__date")
             .text()
     }
 }

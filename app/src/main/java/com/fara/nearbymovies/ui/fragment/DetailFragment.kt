@@ -33,7 +33,7 @@ class DetailFragment : Fragment(R.layout.fragment_detail) {
         val detail = args.detail
         val premiere = args.premiere
         val soon = args.soon
-        val positionOfSoonPager = args.position
+        val positionOfSoonPager = args.positionOfSoonPager
 
         setupSessionRecyclerView()
 
@@ -42,7 +42,7 @@ class DetailFragment : Fragment(R.layout.fragment_detail) {
             .addCallback(viewLifecycleOwner, object : OnBackPressedCallback(true) {
                 override fun handleOnBackPressed() {
                     val bundle = Bundle().apply {
-                        putInt("position", positionOfSoonPager)
+                        putInt("positionOfSoonPager", positionOfSoonPager)
                         putBoolean("state", true)
                     }
                     findNavController().navigate(
@@ -61,14 +61,14 @@ class DetailFragment : Fragment(R.layout.fragment_detail) {
                     .apply(bitmapTransform(BlurTransformation(20, 1)))
                     .diskCacheStrategy(DiskCacheStrategy.ALL)
                     .into(ivBackground)
-                when (soon.title) {
-                    null -> tvTitle.text = premiere.title
+                when (soon?.title) {
+                    null -> tvTitle.text = premiere?.title
                     else -> tvTitle.text = soon.title
                 }
-                when (soon.poster_url) {
+                when (soon?.poster_url) {
                     null -> Glide
                         .with(ivPoster.context)
-                        .load(premiere.poster_url)
+                        .load(premiere?.poster_url)
                         .diskCacheStrategy(DiskCacheStrategy.ALL)
                         .into(ivPoster)
                     else -> Glide
@@ -78,7 +78,7 @@ class DetailFragment : Fragment(R.layout.fragment_detail) {
                         .into(ivPoster)
                 }
                 when {
-                    premiere.age.isNotEmpty() == true -> {
+                    premiere?.age?.isNotEmpty() == true -> {
                         tvAge.text = premiere.age
                         ivIconAge.visibility = View.VISIBLE
                     }
@@ -88,7 +88,7 @@ class DetailFragment : Fragment(R.layout.fragment_detail) {
                 tvCountry.text = country
                 tvGenre.text = genre
                 sessionAdapter.differ.submitList(schedule)
-                if (video_url.isNotEmpty() == true) btnPlayVideo.visibility = View.VISIBLE
+                if (video_url.isNotEmpty()) btnPlayVideo.visibility = View.VISIBLE
             }
         }
 
