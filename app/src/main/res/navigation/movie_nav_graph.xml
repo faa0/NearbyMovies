@@ -32,9 +32,6 @@
         android:label="DetailFragment"
         tools:layout="@layout/fragment_detail">
         <argument
-            android:name="detail"
-            app:argType="com.fara.nearbymovies.entity.Detail" />
-        <argument
             android:name="premiere"
             android:defaultValue="@null"
             app:argType="com.fara.nearbymovies.entity.Premiere"
@@ -54,6 +51,10 @@
         <argument
             android:name="positionOfSoonPager"
             android:defaultValue="0"
+            app:argType="integer" />
+        <argument
+            android:name="positionOfPremiereAdapter"
+            android:defaultValue="-1"
             app:argType="integer" />
     </fragment>
 </navigation>

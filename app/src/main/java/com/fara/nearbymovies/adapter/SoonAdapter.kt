@@ -8,7 +8,6 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.fara.nearbymovies.databinding.ItemSoonBinding
-import com.fara.nearbymovies.entity.Detail
 import com.fara.nearbymovies.entity.Soon
 
 class SoonAdapter : RecyclerView.Adapter<SoonAdapter.SoonViewHolder>() {
@@ -27,7 +26,6 @@ class SoonAdapter : RecyclerView.Adapter<SoonAdapter.SoonViewHolder>() {
     }
 
     val differ = AsyncListDiffer(this, differCallback)
-    private lateinit var detail: Detail
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) = SoonViewHolder(
         ItemSoonBinding.inflate(
@@ -49,20 +47,17 @@ class SoonAdapter : RecyclerView.Adapter<SoonAdapter.SoonViewHolder>() {
             tvDateSoon.text = soon.date
 
             layoutMain.setOnClickListener {
-                onItemClickListener?.let { it(detail, soon) }
+                onItemClickListener?.let { it(soon) }
             }
         }
     }
 
     override fun getItemCount() = differ.currentList.size
 
-    private var onItemClickListener: ((Detail, Soon) -> Unit)? = null
+    private var onItemClickListener: ((Soon) -> Unit)? = null
 
-    fun setDetailMovie(detail: Detail) {
-        this.detail = detail
-    }
 
-    fun setOnItemClickListener(listener: (Detail, Soon) -> Unit) {
+    fun setOnItemClickListener(listener: (Soon) -> Unit) {
         onItemClickListener = listener
     }
 }

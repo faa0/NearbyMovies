@@ -8,7 +8,6 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.fara.nearbymovies.databinding.ItemPremiereBinding
-import com.fara.nearbymovies.entity.Detail
 import com.fara.nearbymovies.entity.Premiere
 
 class PremiereAdapter : RecyclerView.Adapter<PremiereAdapter.PremiereViewHolder>() {
@@ -27,7 +26,6 @@ class PremiereAdapter : RecyclerView.Adapter<PremiereAdapter.PremiereViewHolder>
     }
 
     val differ = AsyncListDiffer(this, differCallback)
-    private var detailList = mutableListOf<Detail>()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) = PremiereViewHolder(
         ItemPremiereBinding.inflate(
@@ -43,26 +41,21 @@ class PremiereAdapter : RecyclerView.Adapter<PremiereAdapter.PremiereViewHolder>
             Glide
                 .with(ivPremiere.context)
                 .load(premiere.poster_url)
-                .diskCacheStrategy(
-                    DiskCacheStrategy.ALL)
+                .diskCacheStrategy(DiskCacheStrategy.ALL)
                 .into(ivPremiere)
             tvTitlePremiere.text = premiere.title
 
             layoutMain.setOnClickListener {
-                onItemClickListener?.let { it(detailList[position], premiere) }
+                onItemClickListener?.let { it(position, premiere) }
             }
         }
     }
 
     override fun getItemCount() = differ.currentList.size
 
-    private var onItemClickListener: ((Detail, Premiere) -> Unit)? = null
+    private var onItemClickListener: ((Int, Premiere) -> Unit)? = null
 
-    fun setDetailList(list: MutableList<Detail>) {
-        detailList = list
-    }
-
-    fun setOnItemClickListener(listener: (Detail, Premiere) -> Unit) {
+    fun setOnItemClickListener(listener: (Int, Premiere) -> Unit) {
         onItemClickListener = listener
     }
 }
