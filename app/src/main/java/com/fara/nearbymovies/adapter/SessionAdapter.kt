@@ -13,7 +13,7 @@ class SessionAdapter : RecyclerView.Adapter<SessionAdapter.SessionViewHolder>() 
     inner class SessionViewHolder(val bind: ItemSessionBinding) :
         RecyclerView.ViewHolder(bind.root)
 
-    private val differCallback = object : DiffUtil.ItemCallback<Session>() {
+    val differ = AsyncListDiffer(this, object : DiffUtil.ItemCallback<Session>() {
         override fun areItemsTheSame(oldItem: Session, newItem: Session): Boolean {
             return oldItem.time_price == newItem.time_price
         }
@@ -21,9 +21,7 @@ class SessionAdapter : RecyclerView.Adapter<SessionAdapter.SessionViewHolder>() 
         override fun areContentsTheSame(oldItem: Session, newItem: Session): Boolean {
             return oldItem == newItem
         }
-    }
-
-    val differ = AsyncListDiffer(this, differCallback)
+    })
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) = SessionViewHolder(
         ItemSessionBinding.inflate(

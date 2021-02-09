@@ -15,7 +15,7 @@ class PremiereAdapter : RecyclerView.Adapter<PremiereAdapter.PremiereViewHolder>
     inner class PremiereViewHolder(val bind: ItemPremiereBinding) :
         RecyclerView.ViewHolder(bind.root)
 
-    private val differCallback = object : DiffUtil.ItemCallback<Premiere>() {
+    val differ = AsyncListDiffer(this, object : DiffUtil.ItemCallback<Premiere>() {
         override fun areItemsTheSame(oldItem: Premiere, newItem: Premiere): Boolean {
             return oldItem.movie_url == newItem.movie_url
         }
@@ -23,9 +23,7 @@ class PremiereAdapter : RecyclerView.Adapter<PremiereAdapter.PremiereViewHolder>
         override fun areContentsTheSame(oldItem: Premiere, newItem: Premiere): Boolean {
             return oldItem == newItem
         }
-    }
-
-    val differ = AsyncListDiffer(this, differCallback)
+    })
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) = PremiereViewHolder(
         ItemPremiereBinding.inflate(

@@ -57,15 +57,15 @@ class DetailFragment : Fragment(R.layout.fragment_detail) {
                         tvCountry.text = country
                         tvGenre.text = genre
                         sessionAdapter.differ.submitList(schedule)
-                        if (video_url.isNotEmpty()) btnPlayVideo.visibility = View.VISIBLE
-                        onClickButtonPlayVideo(video_url)
+                        if (video_url?.isNotEmpty() == true) btnPlayVideo.visibility = View.VISIBLE
+                        video_url?.let { it1 -> onClickButtonPlayVideo(it1) }
                     }
                 }
             })
         } else {
             movieViewModel.detailLiveDataPremiere.observe(viewLifecycleOwner, {
                 bind.apply {
-                    it.apply {
+                    it?.apply {
                         Glide
                             .with(ivBackground.context)
                             .load(background)
@@ -77,8 +77,8 @@ class DetailFragment : Fragment(R.layout.fragment_detail) {
                         tvCountry.text = country
                         tvGenre.text = genre
                         sessionAdapter.differ.submitList(schedule)
-                        if (video_url.isNotEmpty()) btnPlayVideo.visibility = View.VISIBLE
-                        onClickButtonPlayVideo(video_url)
+                        if (video_url?.isNotEmpty() == true) btnPlayVideo.visibility = View.VISIBLE
+                        video_url?.let { it1 -> onClickButtonPlayVideo(it1) }
                     }
                 }
             })
@@ -139,6 +139,7 @@ class DetailFragment : Fragment(R.layout.fragment_detail) {
                         R.id.action_detailFragment_to_premiereFragment,
                         bundle
                     )
+                    movieViewModel.detailLiveDataPremiere.postValue(null)
                 }
             }
             )

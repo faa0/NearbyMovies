@@ -17,20 +17,16 @@ class MovieViewModel(
 ) : ViewModel() {
 
     init {
-        GlobalScope.launch {
-            setDataToLiveData()
-        }
+        GlobalScope.launch { setDataToLiveData() }
     }
 
     private val premiereList = mutableListOf<Premiere>()
-    private val urlListPremiere = mutableListOf<String>()
     private lateinit var detailPremiere: Detail
-    val premiereLiveData = MutableLiveData<MutableList<Premiere>>()
+    val premiereLiveData = MutableLiveData<List<Premiere>>()
     val detailLiveDataPremiere = MutableLiveData<Detail>()
     var positionPremiere = 0
 
     private val soonList = mutableListOf<Soon>()
-    private val urlListSoon = mutableListOf<String>()
     private lateinit var detailSoon: Detail
     val soonLiveData = MutableLiveData<List<Soon>>()
     val detailLiveDataSoon = MutableLiveData<Detail>()
@@ -40,21 +36,14 @@ class MovieViewModel(
         val doc = Jsoup.connect(BASE_URL).get()
         soonLiveData.postValue(setDataToSoonList(doc))
         premiereLiveData.postValue(setDataToPremiereList(doc))
-        detailLiveDataPremiere.postValue(setDetailToPremiere())
-        detailLiveDataSoon.postValue(setDetailToSoon())
     }
 
+    fun updateDetailPremiere() = detailLiveDataPremiere.postValue(setDetailToPremiere())
 
-    fun updateDetailPremiere() {
-        detailLiveDataPremiere.postValue(setDetailToPremiere())
-    }
-
-    fun updateDetailSoon() {
-        detailLiveDataSoon.postValue(setDetailToSoon())
-    }
+    fun updateDetailSoon() = detailLiveDataSoon.postValue(setDetailToSoon())
 
     private fun setDetailToSoon(): Detail {
-        val doc = Jsoup.connect(setDataToUrlListSoon()[positionSoon]).get()
+        val doc = Jsoup.connect(soonList[positionSoon].movie_url).get()
         movieRepository.apply {
             detailSoon = Detail(
                 getBackground(doc),
@@ -70,7 +59,7 @@ class MovieViewModel(
     }
 
     private fun setDetailToPremiere(): Detail {
-        val doc = Jsoup.connect(setDataToUrlListPremiere()[positionPremiere]).get()
+        val doc = Jsoup.connect(premiereList[positionPremiere].movie_url).get()
         movieRepository.apply {
             detailPremiere = Detail(
                 getBackground(doc),
@@ -83,16 +72,6 @@ class MovieViewModel(
             )
         }
         return detailPremiere
-    }
-
-    private fun setDataToUrlListPremiere(): List<String> {
-        for (i in premiereList) i.movie_url.let { urlListPremiere.add(it) }
-        return urlListPremiere
-    }
-
-    private fun setDataToUrlListSoon(): List<String> {
-        for (i in soonList) i.movie_url.let { urlListSoon.add(it) }
-        return urlListSoon
     }
 
     private fun setDataToPremiereList(doc: Document): MutableList<Premiere> {

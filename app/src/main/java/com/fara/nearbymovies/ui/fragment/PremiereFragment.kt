@@ -17,6 +17,7 @@ import com.fara.nearbymovies.ui.MovieActivity
 import com.fara.nearbymovies.viewmodel.MovieViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 class PremiereFragment : Fragment(R.layout.fragment_premiere) {
@@ -42,12 +43,8 @@ class PremiereFragment : Fragment(R.layout.fragment_premiere) {
         state = args.state
 
         movieViewModel.apply {
-            soonLiveData.observe(viewLifecycleOwner, {
-                soonAdapter.differ.submitList(it)
-            })
-            premiereLiveData.observe(viewLifecycleOwner, {
-                premiereAdapter.differ.submitList(it)
-            })
+            soonLiveData.observe(viewLifecycleOwner, { soonAdapter.differ.submitList(it) })
+            premiereLiveData.observe(viewLifecycleOwner, { premiereAdapter.differ.submitList(it) })
         }
 
         bind.soonPager.registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback() {
@@ -61,11 +58,8 @@ class PremiereFragment : Fragment(R.layout.fragment_premiere) {
                     }
                     else -> positionOfSoonPager = args.positionOfSoonPager
                 }
-
                 movieViewModel.positionSoon = positionOfSoonPager
-                GlobalScope.launch(Dispatchers.IO) {
-                    movieViewModel.updateDetailSoon()
-                }
+                GlobalScope.launch(Dispatchers.IO) { movieViewModel.updateDetailSoon() }
 
                 if (state) bind.soonPager.setCurrentItem(positionOfSoonPager, false)
             }
@@ -95,18 +89,20 @@ class PremiereFragment : Fragment(R.layout.fragment_premiere) {
 
         premiereAdapter.setOnItemClickListener { position, premiere ->
             movieViewModel.positionPremiere = position
-            GlobalScope.launch(Dispatchers.IO) {
-                movieViewModel.updateDetailPremiere()
-            }
+            GlobalScope.launch(Dispatchers.IO) { movieViewModel.updateDetailPremiere() }
 
-            val bundle = Bundle().apply {
-                putSerializable("positionOfPremiereAdapter", position)
-                putSerializable("premiere", premiere)
+            GlobalScope.launch {
+                delay(200)
+                val bundle = Bundle().apply {
+                    putSerializable("positionOfPremiereAdapter", position)
+                    putSerializable("premiere", premiere)
+                    putSerializable("positionOfSoonPager", positionOfSoonPager)
+                }
+                findNavController().navigate(
+                    R.id.action_premiereFragment_to_detailFragment,
+                    bundle
+                )
             }
-            findNavController().navigate(
-                R.id.action_premiereFragment_to_detailFragment,
-                bundle
-            )
         }
 
         onBackPressed()

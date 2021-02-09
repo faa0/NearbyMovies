@@ -15,7 +15,7 @@ class SoonAdapter : RecyclerView.Adapter<SoonAdapter.SoonViewHolder>() {
     inner class SoonViewHolder(val bind: ItemSoonBinding) :
         RecyclerView.ViewHolder(bind.root)
 
-    private val differCallback = object : DiffUtil.ItemCallback<Soon>() {
+    val differ = AsyncListDiffer(this, object : DiffUtil.ItemCallback<Soon>() {
         override fun areItemsTheSame(oldItem: Soon, newItem: Soon): Boolean {
             return oldItem.movie_url == newItem.movie_url
         }
@@ -23,9 +23,7 @@ class SoonAdapter : RecyclerView.Adapter<SoonAdapter.SoonViewHolder>() {
         override fun areContentsTheSame(oldItem: Soon, newItem: Soon): Boolean {
             return oldItem == newItem
         }
-    }
-
-    val differ = AsyncListDiffer(this, differCallback)
+    })
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) = SoonViewHolder(
         ItemSoonBinding.inflate(
