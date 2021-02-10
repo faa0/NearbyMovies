@@ -6,7 +6,7 @@ import com.fara.nearbymovies.entity.Detail
 import com.fara.nearbymovies.entity.Premiere
 import com.fara.nearbymovies.entity.Soon
 import com.fara.nearbymovies.repository.MovieRepository
-import com.fara.nearbymovies.utils.Constants.Companion.BASE_URL
+import com.fara.nearbymovies.utils.Constants.Companion.CINEMA_CITY_BASE_URL
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import org.jsoup.Jsoup
@@ -32,8 +32,8 @@ class MovieViewModel(
     val detailLiveDataSoon = MutableLiveData<Detail>()
     var positionSoon = 0
 
-    private fun setDataToLiveData() {
-        val doc = Jsoup.connect(BASE_URL).get()
+    fun setDataToLiveData() {
+        val doc = Jsoup.connect(CINEMA_CITY_BASE_URL).get()
         soonLiveData.postValue(setDataToSoonList(doc))
         premiereLiveData.postValue(setDataToPremiereList(doc))
     }

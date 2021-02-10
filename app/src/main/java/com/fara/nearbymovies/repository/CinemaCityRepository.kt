@@ -3,7 +3,7 @@ package com.fara.nearbymovies.repository
 import androidx.lifecycle.ViewModel
 import com.fara.nearbymovies.entity.Session
 import com.fara.nearbymovies.utils.Constants
-import com.fara.nearbymovies.utils.Constants.Companion.BASE_URL
+import com.fara.nearbymovies.utils.Constants.Companion.CINEMA_CITY_BASE_URL
 import org.jsoup.nodes.Document
 import org.jsoup.nodes.Element
 
@@ -89,7 +89,7 @@ class MovieRepository : ViewModel() {
 
     fun getBackground(doc: Document): String {
         val elements = doc.getElementsByClass("movie-video-container")
-        return (BASE_URL + elements
+        return (CINEMA_CITY_BASE_URL + elements
             .select("img.movie-video-container__img")
             .attr("src"))
     }
@@ -108,12 +108,12 @@ class MovieRepository : ViewModel() {
     }
 
     fun getPosterUrlPremiere(element: Element): String {
-        return (BASE_URL + element.select("img.poster__img")
+        return (CINEMA_CITY_BASE_URL + element.select("img.poster__img")
             .attr("src"))
     }
 
     fun getPosterUrlSoon(element: Element): String {
-        return (Constants.BASE_URL + element.select("div.poster-small")
+        return (Constants.CINEMA_CITY_BASE_URL + element.select("div.poster-small")
             .select("img")
             .attr("src"))
     }
@@ -124,7 +124,7 @@ class MovieRepository : ViewModel() {
     }
 
     fun getMovieUrlSoon(element: Element): String {
-        return (BASE_URL + element.select("a")
+        return (CINEMA_CITY_BASE_URL + element.select("a")
             .attr("href"))
     }
 

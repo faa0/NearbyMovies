@@ -6,5 +6,5 @@ data class Premiere(
     val title: String,
     val poster_url: String,
     val movie_url: String,
-    val age: String,
+    val age: String? = null
 ) : Serializable

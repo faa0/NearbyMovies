@@ -66,5 +66,17 @@
             app:layout_constraintVertical_bias="0.0"
             app:spanCount="3"
             tools:listitem="@layout/item_premiere" />
+
+        <TextView
+            android:id="@+id/tvCity"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="16dp"
+            android:text="Одеса"
+            android:textAllCaps="true"
+            android:textColor="@color/teal_200"
+            app:layout_constraintBottom_toBottomOf="@+id/tvLabelSoon"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/tvLabelSoon" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 </androidx.core.widget.NestedScrollView>
