@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
 import com.fara.nearbymovies.R
 import com.fara.nearbymovies.repository.MovieRepository
+import com.fara.nearbymovies.repository.MultiplexRepository
 import com.fara.nearbymovies.viewmodel.MovieViewModel
 import com.fara.nearbymovies.viewmodel.factory.MovieViewModelProviderFactory
 
@@ -17,8 +18,10 @@ class MovieActivity : AppCompatActivity() {
         setContentView(R.layout.activity_movie)
 
         val movieRepository = MovieRepository()
+        val multiplexRepository = MultiplexRepository()
 
-        val movieViewModelProviderFactory = MovieViewModelProviderFactory(movieRepository)
+        val movieViewModelProviderFactory =
+            MovieViewModelProviderFactory(movieRepository, multiplexRepository)
         movieViewModel = ViewModelProvider(
             this,
             movieViewModelProviderFactory

@@ -1,10 +1,12 @@
 package com.fara.nearbymovies.repository
 
 import androidx.lifecycle.ViewModel
+import com.fara.nearbymovies.utils.Constants
 import com.fara.nearbymovies.utils.Constants.Companion.MULTIPLEX_BASE_URL
+import org.jsoup.Jsoup
 import org.jsoup.nodes.Element
 
-class BaydaRepository : ViewModel() {
+class MultiplexRepository : ViewModel() {
 
 //    fun getSchedule(doc: Document): MutableList<Session> {
 //        val listOfSessions = mutableListOf<Session>()
@@ -91,17 +93,32 @@ class BaydaRepository : ViewModel() {
 //            .attr("src"))
 //    }
 
+    fun getItemSize(): Int {
+        val doc = Jsoup.connect(Constants.MULTIPLEX_ZP).get()
+        val elements = doc.getElementsByClass("cinema_inside sch_date")
+        val hashSet = HashSet(
+            elements.select("div.film")
+                .select("a")
+                .eachAttr("title")
+        )
+        return hashSet.size
+    }
+
     fun getTitlePremiere(element: Element): String {
-        return element.select("a").attr("title")
+        return element.attr("title")
     }
 
     fun getPosterUrlPremiere(element: Element): String {
-        return MULTIPLEX_BASE_URL + element.attr("style")
-            .removePrefix("background-image: url('")
-            .removeSuffix("')")
+        return MULTIPLEX_BASE_URL + element
+            .select("div.poster.is-desktop")
+            .toString()
+            .replace("<div class=\"poster is-desktop\" style=\"background-image: url('", "")
+            .replaceAfter(">", "")
+            .replace("')\">", "")
     }
 
     fun getMovieUrlPremiere(element: Element): String {
-        return MULTIPLEX_BASE_URL + element.select("a").attr("href")
+        return MULTIPLEX_BASE_URL + element
+            .attr("href")
     }
 }

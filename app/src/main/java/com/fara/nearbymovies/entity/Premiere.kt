@@ -4,7 +4,7 @@ import java.io.Serializable
 
 data class Premiere(
     val title: String,
-    val poster_url: String,
-    val movie_url: String,
+    val poster_url: String? = null,
+    val movie_url: String? = null,
     val age: String? = null
 ) : Serializable

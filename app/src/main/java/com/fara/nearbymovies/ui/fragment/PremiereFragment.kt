@@ -13,7 +13,6 @@ import com.fara.nearbymovies.R
 import com.fara.nearbymovies.adapter.PremiereAdapter
 import com.fara.nearbymovies.adapter.SoonAdapter
 import com.fara.nearbymovies.databinding.FragmentPremiereBinding
-import com.fara.nearbymovies.ui.CityDialog
 import com.fara.nearbymovies.ui.MovieActivity
 import com.fara.nearbymovies.viewmodel.MovieViewModel
 import kotlinx.coroutines.Dispatchers
@@ -108,7 +107,9 @@ class PremiereFragment : Fragment(R.layout.fragment_premiere) {
         }
 
         bind.tvCity.setOnClickListener {
-            CityDialog(requireContext()).show()
+            findNavController().navigate(
+                R.id.action_premiereFragment_to_chooseFragment
+            )
         }
 
         onBackPressed()

@@ -2,7 +2,6 @@ package com.fara.nearbymovies.repository
 
 import androidx.lifecycle.ViewModel
 import com.fara.nearbymovies.entity.Session
-import com.fara.nearbymovies.utils.Constants
 import com.fara.nearbymovies.utils.Constants.Companion.CINEMA_CITY_BASE_URL
 import org.jsoup.nodes.Document
 import org.jsoup.nodes.Element
@@ -113,7 +112,7 @@ class MovieRepository : ViewModel() {
     }
 
     fun getPosterUrlSoon(element: Element): String {
-        return (Constants.CINEMA_CITY_BASE_URL + element.select("div.poster-small")
+        return (CINEMA_CITY_BASE_URL + element.select("div.poster-small")
             .select("img")
             .attr("src"))
     }
