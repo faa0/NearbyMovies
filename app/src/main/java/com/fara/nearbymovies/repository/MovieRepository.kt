@@ -1,5 +1,6 @@
 package com.fara.nearbymovies.repository
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import com.fara.nearbymovies.entity.Session
 import com.fara.nearbymovies.utils.Constants.Companion.CINEMA_CITY_BASE_URL
@@ -13,6 +14,7 @@ class MovieRepository : ViewModel() {
         for (i in getListOfSessions(doc).indices) {
             listOfSessions += Session(getListOfSessions(doc)[i], getListOfTimes(doc)[i])
         }
+        Log.d("tea", listOfSessions.toString())
         return listOfSessions
     }
 

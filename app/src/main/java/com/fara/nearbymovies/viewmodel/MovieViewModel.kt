@@ -5,9 +5,11 @@ import androidx.lifecycle.ViewModel
 import com.fara.nearbymovies.entity.Detail
 import com.fara.nearbymovies.entity.Premiere
 import com.fara.nearbymovies.entity.Soon
+import com.fara.nearbymovies.repository.MayakRepositiory
 import com.fara.nearbymovies.repository.MovieRepository
 import com.fara.nearbymovies.repository.MultiplexRepository
 import com.fara.nearbymovies.utils.Constants.Companion.CINEMA_CITY_BASE_URL
+import com.fara.nearbymovies.utils.Constants.Companion.MAYAK_ZP
 import com.fara.nearbymovies.utils.Constants.Companion.MULTIPLEX_ZP
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
@@ -16,7 +18,8 @@ import org.jsoup.nodes.Document
 
 class MovieViewModel(
     private val movieRepository: MovieRepository,
-    private val multiplexRepository: MultiplexRepository
+    private val multiplexRepository: MultiplexRepository,
+    private val mayakRepositiory: MayakRepositiory,
 ) : ViewModel() {
 
     init {
@@ -35,6 +38,13 @@ class MovieViewModel(
     val detailLiveDataSoon = MutableLiveData<Detail>()
     var positionSoon = 0
 
+    var cinema = 0
+
+    fun setMayakLiveData() {
+        val doc = Jsoup.connect(MAYAK_ZP).get()
+        premiereLiveData.postValue(setMayakPremiereList(doc))
+    }
+
     fun setMultiplexLiveData() {
         val doc = Jsoup.connect(MULTIPLEX_ZP).get()
         premiereLiveData.postValue(setMultiplexPremiereList(doc))
@@ -46,9 +56,64 @@ class MovieViewModel(
         premiereLiveData.postValue(setDataToPremiereList(doc))
     }
 
-    fun updateDetailPremiere() = detailLiveDataPremiere.postValue(setDetailToPremiere())
+    fun updateDetailPremiere() {
+        when (cinema) {
+            0 -> detailLiveDataPremiere.postValue(setDetailToPremiere())
+            1 -> detailLiveDataPremiere.postValue(setMultiplexDetailToPremiere())
+            2 -> detailLiveDataPremiere.postValue(setMayakDetailToPremiere())
+        }
+    }
 
     fun updateDetailSoon() = detailLiveDataSoon.postValue(setDetailToSoon())
+
+    private fun setMayakDetailToPremiere(): Detail {
+        val doc = Jsoup.connect(premiereList[positionPremiere].movie_url).get()
+        mayakRepositiory.apply {
+            detailPremiere = Detail(
+                null,
+                getDescription(doc),
+                null,
+                getYear(doc),
+                getCountry(doc),
+                getGenre(doc),
+                null
+            )
+        }
+        return detailPremiere
+    }
+
+    private fun setMayakPremiereList(doc: Document): MutableList<Premiere> {
+        premiereList.clear()
+        var count = 0
+        while (count < 2 * MayakRepositiory().getItemSize()) {
+            val premiere = doc.getElementsByClass("film-title-list")[count / 2]
+            val poster = doc.getElementsByClass("img-holder").select("a")[count]
+            premiereList += Premiere(
+                mayakRepositiory.getTitlePremiere(premiere),
+                mayakRepositiory.getPosterUrlPremiere(poster),
+                mayakRepositiory.getMovieUrlPremiere(premiere),
+                null
+            )
+            count += 2
+        }
+        return premiereList
+    }
+
+    private fun setMultiplexDetailToPremiere(): Detail {
+        val doc = Jsoup.connect(premiereList[positionPremiere].movie_url).get()
+        multiplexRepository.apply {
+            detailPremiere = Detail(
+                null,
+                getDescription(doc),
+                getVideoUrl(doc),
+                getYear(doc),
+                getCountry(doc),
+                getGenre(doc),
+                getSchedule(doc)
+            )
+        }
+        return detailPremiere
+    }
 
     private fun setMultiplexPremiereList(doc: Document): MutableList<Premiere> {
         premiereList.clear()

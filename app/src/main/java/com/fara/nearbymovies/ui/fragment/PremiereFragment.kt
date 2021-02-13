@@ -112,6 +112,8 @@ class PremiereFragment : Fragment(R.layout.fragment_premiere) {
             )
         }
 
+//        GlobalScope.launch(Dispatchers.IO) { Log.d("tea", MayakRepositiory().getGenre()) }
+
         onBackPressed()
 
         return bind.root

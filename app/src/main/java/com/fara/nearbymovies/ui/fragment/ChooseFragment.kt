@@ -40,6 +40,7 @@ class ChooseFragment : Fragment(R.layout.fragment_choose) {
                 movieViewModel.premiereLiveData.observe(
                     viewLifecycleOwner,
                     { premiereAdapter.differ.submitList(it) })
+                movieViewModel.cinema = 0
             }
 
             tvMultiplex.setOnClickListener {
@@ -49,6 +50,18 @@ class ChooseFragment : Fragment(R.layout.fragment_choose) {
                 movieViewModel.premiereLiveData.observe(
                     viewLifecycleOwner,
                     { premiereAdapter.differ.submitList(it) })
+                movieViewModel.cinema = 1
+
+            }
+
+            tvMayakovskiy.setOnClickListener {
+                GlobalScope.launch(Dispatchers.IO) {
+                    movieViewModel.setMayakLiveData()
+                }
+                movieViewModel.premiereLiveData.observe(
+                    viewLifecycleOwner,
+                    { premiereAdapter.differ.submitList(it) })
+                movieViewModel.cinema = 2
             }
         }
 
