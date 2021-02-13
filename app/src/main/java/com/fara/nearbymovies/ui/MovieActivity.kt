@@ -4,9 +4,9 @@ import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
 import com.fara.nearbymovies.R
-import com.fara.nearbymovies.repository.MayakRepositiory
-import com.fara.nearbymovies.repository.MovieRepository
-import com.fara.nearbymovies.repository.MultiplexRepository
+import com.fara.nearbymovies.db.AppDatabase
+import com.fara.nearbymovies.repository.LocalRepository
+import com.fara.nearbymovies.repository.RemoteRepository
 import com.fara.nearbymovies.viewmodel.MovieViewModel
 import com.fara.nearbymovies.viewmodel.factory.MovieViewModelProviderFactory
 
@@ -18,12 +18,11 @@ class MovieActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_movie)
 
-        val movieRepository = MovieRepository()
-        val multiplexRepository = MultiplexRepository()
-        val mayakRepositiory = MayakRepositiory()
+        val remoteRepository = RemoteRepository()
+        val localRepository = LocalRepository(AppDatabase(this))
 
         val movieViewModelProviderFactory =
-            MovieViewModelProviderFactory(movieRepository, multiplexRepository, mayakRepositiory)
+            MovieViewModelProviderFactory(remoteRepository, localRepository, application)
         movieViewModel = ViewModelProvider(
             this,
             movieViewModelProviderFactory

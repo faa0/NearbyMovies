@@ -1,13 +1,14 @@
 package com.fara.nearbymovies.viewmodel
 
+import android.app.Application
+import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import com.fara.nearbymovies.entity.Cinema
 import com.fara.nearbymovies.entity.Detail
-import com.fara.nearbymovies.entity.Premiere
 import com.fara.nearbymovies.entity.Soon
-import com.fara.nearbymovies.repository.MayakRepositiory
-import com.fara.nearbymovies.repository.MovieRepository
-import com.fara.nearbymovies.repository.MultiplexRepository
+import com.fara.nearbymovies.repository.LocalRepository
+import com.fara.nearbymovies.repository.RemoteRepository
 import com.fara.nearbymovies.utils.Constants.Companion.CINEMA_CITY_BASE_URL
 import com.fara.nearbymovies.utils.Constants.Companion.MAYAK_ZP
 import com.fara.nearbymovies.utils.Constants.Companion.MULTIPLEX_ZP
@@ -17,18 +18,20 @@ import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
 
 class MovieViewModel(
-    private val movieRepository: MovieRepository,
-    private val multiplexRepository: MultiplexRepository,
-    private val mayakRepositiory: MayakRepositiory,
-) : ViewModel() {
+    private val remoteRepository: RemoteRepository,
+    private val localRepository: LocalRepository,
+    app: Application
+) : AndroidViewModel(app) {
 
     init {
-        GlobalScope.launch { setDataToLiveData() }
+        GlobalScope.launch {
+            setCinemaCityLiveData()
+        }
     }
 
-    private val premiereList = mutableListOf<Premiere>()
+    private val premiereList = mutableListOf<Cinema>()
     private lateinit var detailPremiere: Detail
-    val premiereLiveData = MutableLiveData<List<Premiere>>()
+    val premiereLiveData = MutableLiveData<List<Cinema>>()
     val detailLiveDataPremiere = MutableLiveData<Detail>()
     var positionPremiere = 0
 
@@ -40,6 +43,16 @@ class MovieViewModel(
 
     var cinema = 0
 
+    fun insertCinema(cinema: Cinema) = localRepository.upsert(cinema)
+
+    fun insertCinemaList(cinema: List<Cinema>) = localRepository.upsertList(cinema)
+
+    fun getCinemas() = localRepository.getCinemas()
+
+    fun deleteCinema(cinema: Cinema) = viewModelScope.launch {
+        localRepository.deleteCinema(cinema)
+    }
+
     fun setMayakLiveData() {
         val doc = Jsoup.connect(MAYAK_ZP).get()
         premiereLiveData.postValue(setMayakPremiereList(doc))
@@ -50,48 +63,50 @@ class MovieViewModel(
         premiereLiveData.postValue(setMultiplexPremiereList(doc))
     }
 
-    fun setDataToLiveData() {
+    fun setCinemaCityLiveData() {
         val doc = Jsoup.connect(CINEMA_CITY_BASE_URL).get()
-        soonLiveData.postValue(setDataToSoonList(doc))
-        premiereLiveData.postValue(setDataToPremiereList(doc))
+        soonLiveData.postValue(setCinemaCitySoonList(doc))
+        premiereLiveData.postValue(setCinemaCityPremiereList(doc))
     }
 
     fun updateDetailPremiere() {
         when (cinema) {
-            0 -> detailLiveDataPremiere.postValue(setDetailToPremiere())
+            0 -> detailLiveDataPremiere.postValue(setCinemaCityDetailToPremiere())
             1 -> detailLiveDataPremiere.postValue(setMultiplexDetailToPremiere())
             2 -> detailLiveDataPremiere.postValue(setMayakDetailToPremiere())
         }
     }
 
-    fun updateDetailSoon() = detailLiveDataSoon.postValue(setDetailToSoon())
+    fun updateDetailSoon() = detailLiveDataSoon.postValue(setCinemaCityDetailToSoon())
 
     private fun setMayakDetailToPremiere(): Detail {
         val doc = Jsoup.connect(premiereList[positionPremiere].movie_url).get()
-        mayakRepositiory.apply {
+        remoteRepository.apply {
             detailPremiere = Detail(
                 null,
-                getDescription(doc),
+                getMayakovskogoDescription(doc),
                 null,
-                getYear(doc),
-                getCountry(doc),
-                getGenre(doc),
+                getMayakovskogoYear(doc),
+                getMayakovskogoCountry(doc),
+                getMayakovskogoGenre(doc),
                 null
             )
         }
         return detailPremiere
     }
 
-    private fun setMayakPremiereList(doc: Document): MutableList<Premiere> {
+    private fun setMayakPremiereList(doc: Document): MutableList<Cinema> {
         premiereList.clear()
         var count = 0
-        while (count < 2 * MayakRepositiory().getItemSize()) {
+        while (count < 2 * RemoteRepository().getMayakovskogoItemSize()) {
             val premiere = doc.getElementsByClass("film-title-list")[count / 2]
             val poster = doc.getElementsByClass("img-holder").select("a")[count]
-            premiereList += Premiere(
-                mayakRepositiory.getTitlePremiere(premiere),
-                mayakRepositiory.getPosterUrlPremiere(poster),
-                mayakRepositiory.getMovieUrlPremiere(premiere),
+            premiereList += Cinema(
+                "Mayakovskogo",
+                "Zaporozhye",
+                remoteRepository.getMayakovskogoTitlePremiere(premiere),
+                remoteRepository.getMayakovskogoPosterUrlPremiere(poster),
+                remoteRepository.getMayakovskogoMovieUrlPremiere(premiere),
                 null
             )
             count += 2
@@ -101,31 +116,33 @@ class MovieViewModel(
 
     private fun setMultiplexDetailToPremiere(): Detail {
         val doc = Jsoup.connect(premiereList[positionPremiere].movie_url).get()
-        multiplexRepository.apply {
+        remoteRepository.apply {
             detailPremiere = Detail(
                 null,
-                getDescription(doc),
-                getVideoUrl(doc),
-                getYear(doc),
-                getCountry(doc),
-                getGenre(doc),
-                getSchedule(doc)
+                getMultiplexDescription(doc),
+                getMultiplexVideoUrl(doc),
+                getMultiplexYear(doc),
+                getMultiplexCountry(doc),
+                getMultiplexGenre(doc),
+                getMultiplexSchedule(doc)
             )
         }
         return detailPremiere
     }
 
-    private fun setMultiplexPremiereList(doc: Document): MutableList<Premiere> {
+    private fun setMultiplexPremiereList(doc: Document): MutableList<Cinema> {
         premiereList.clear()
         var count = 0
-        while (count < 2 * MultiplexRepository().getItemSize()) {
+        while (count < 2 * RemoteRepository().getMultiplexItemSize()) {
             val premiere = doc.getElementsByClass("cinema_inside sch_date")
                 .select("div.film")
                 .select("a")[count]
-            premiereList += Premiere(
-                multiplexRepository.getTitlePremiere(premiere),
-                multiplexRepository.getPosterUrlPremiere(premiere),
-                multiplexRepository.getMovieUrlPremiere(premiere),
+            premiereList += Cinema(
+                "Multiplex",
+                "Zaporozhye",
+                remoteRepository.getMultiplexTitlePremiere(premiere),
+                remoteRepository.getMultiplexPosterUrlPremiere(premiere),
+                remoteRepository.getMultiplexMovieUrlPremiere(premiere),
                 null
             )
             count += 2
@@ -133,60 +150,62 @@ class MovieViewModel(
         return premiereList
     }
 
-    private fun setDetailToSoon(): Detail {
+    private fun setCinemaCityDetailToSoon(): Detail {
         val doc = Jsoup.connect(soonList[positionSoon].movie_url).get()
-        movieRepository.apply {
+        remoteRepository.apply {
             detailSoon = Detail(
-                getBackground(doc),
-                getDescription(doc),
-                getVideoUrl(doc),
-                getYear(doc),
-                getCountry(doc),
-                getGenre(doc),
+                getCinemaCityBackground(doc),
+                getCinemaCityDescription(doc),
+                getCinemaCityVideoUrl(doc),
+                getCinemaCityYear(doc),
+                getCinemaCityCountry(doc),
+                getCinemaCityGenre(doc),
                 null
             )
         }
         return detailSoon
     }
 
-    private fun setDetailToPremiere(): Detail {
+    private fun setCinemaCityDetailToPremiere(): Detail {
         val doc = Jsoup.connect(premiereList[positionPremiere].movie_url).get()
-        movieRepository.apply {
+        remoteRepository.apply {
             detailPremiere = Detail(
-                getBackground(doc),
-                getDescription(doc),
-                getVideoUrl(doc),
-                getYear(doc),
-                getCountry(doc),
-                getGenre(doc),
-                getSchedule(doc)
+                getCinemaCityBackground(doc),
+                getCinemaCityDescription(doc),
+                getCinemaCityVideoUrl(doc),
+                getCinemaCityYear(doc),
+                getCinemaCityCountry(doc),
+                getCinemaCityGenre(doc),
+                getCinemaCitySchedule(doc)
             )
         }
         return detailPremiere
     }
 
-    private fun setDataToPremiereList(doc: Document): MutableList<Premiere> {
+    private fun setCinemaCityPremiereList(doc: Document): MutableList<Cinema> {
         premiereList.clear()
         val premiere = doc.getElementsByClass("poster")
         for (element in premiere)
-            premiereList += Premiere(
-                movieRepository.getTitlePremiere(element),
-                movieRepository.getPosterUrlPremiere(element),
-                movieRepository.getMovieUrlPremiere(element),
-                movieRepository.getAgePremiere(element)
+            premiereList += Cinema(
+                "CinemaCity",
+                "Odessa",
+                remoteRepository.getCinemaCityTitlePremiere(element),
+                remoteRepository.getCinemaCityPosterUrlPremiere(element),
+                remoteRepository.getCinemaCityMovieUrlPremiere(element),
+                remoteRepository.getCinemaCityAgePremiere(element)
             )
         return premiereList
     }
 
-    private fun setDataToSoonList(doc: Document): MutableList<Soon> {
+    private fun setCinemaCitySoonList(doc: Document): MutableList<Soon> {
         val soon = doc.getElementsByClass("on-screen-soon")
         premiereList.clear()
         for (element in soon) {
             soonList += Soon(
-                movieRepository.getTitleSoon(element),
-                movieRepository.getPosterUrlSoon(element),
-                movieRepository.getDateSoon(element),
-                movieRepository.getMovieUrlSoon(element)
+                remoteRepository.getCinemaCityTitleSoon(element),
+                remoteRepository.getCinemaCityPosterUrlSoon(element),
+                remoteRepository.getCinemaCityDateSoon(element),
+                remoteRepository.getCinemaCityMovieUrlSoon(element)
             )
         }
         return soonList

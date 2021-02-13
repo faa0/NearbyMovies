@@ -35,7 +35,7 @@ class DetailFragment : Fragment(R.layout.fragment_detail) {
     ): View {
         bind = FragmentDetailBinding.inflate(layoutInflater)
         movieViewModel = (activity as MovieActivity).movieViewModel
-        val premiere = args.premiere
+        val cinema = args.cinema
         val soon = args.soon
         val positionOfPremiereAdapter = args.positionOfPremiereAdapter
         positionOfSoonPager = args.positionOfSoonPager
@@ -86,13 +86,13 @@ class DetailFragment : Fragment(R.layout.fragment_detail) {
 
         bind.apply {
             when (soon?.title) {
-                null -> tvTitle.text = premiere?.title
+                null -> tvTitle.text = cinema?.title
                 else -> tvTitle.text = soon.title
             }
             when (soon?.poster_url) {
                 null -> Glide
                     .with(ivPoster.context)
-                    .load(premiere?.poster_url)
+                    .load(cinema?.poster_url)
                     .diskCacheStrategy(DiskCacheStrategy.ALL)
                     .into(ivPoster)
                 else -> Glide
@@ -102,8 +102,8 @@ class DetailFragment : Fragment(R.layout.fragment_detail) {
                     .into(ivPoster)
             }
             when {
-                premiere?.age?.isNotEmpty() == true -> {
-                    tvAge.text = premiere.age
+                cinema?.age?.isNotEmpty() == true -> {
+                    tvAge.text = cinema.age
                     ivIconAge.visibility = View.VISIBLE
                 }
             }

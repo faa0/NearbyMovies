@@ -8,19 +8,19 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.fara.nearbymovies.databinding.ItemPremiereBinding
-import com.fara.nearbymovies.entity.Premiere
+import com.fara.nearbymovies.entity.Cinema
 
 class PremiereAdapter : RecyclerView.Adapter<PremiereAdapter.PremiereViewHolder>() {
 
     inner class PremiereViewHolder(val bind: ItemPremiereBinding) :
         RecyclerView.ViewHolder(bind.root)
 
-    val differ = AsyncListDiffer(this, object : DiffUtil.ItemCallback<Premiere>() {
-        override fun areItemsTheSame(oldItem: Premiere, newItem: Premiere): Boolean {
+    val differ = AsyncListDiffer(this, object : DiffUtil.ItemCallback<Cinema>() {
+        override fun areItemsTheSame(oldItem: Cinema, newItem: Cinema): Boolean {
             return oldItem.movie_url == newItem.movie_url
         }
 
-        override fun areContentsTheSame(oldItem: Premiere, newItem: Premiere): Boolean {
+        override fun areContentsTheSame(oldItem: Cinema, newItem: Cinema): Boolean {
             return oldItem == newItem
         }
     })
@@ -51,9 +51,9 @@ class PremiereAdapter : RecyclerView.Adapter<PremiereAdapter.PremiereViewHolder>
 
     override fun getItemCount() = differ.currentList.size
 
-    private var onItemClickListener: ((Int, Premiere) -> Unit)? = null
+    private var onItemClickListener: ((Int, Cinema) -> Unit)? = null
 
-    fun setOnItemClickListener(listener: (Int, Premiere) -> Unit) {
+    fun setOnItemClickListener(listener: (Int, Cinema) -> Unit) {
         onItemClickListener = listener
     }
 }

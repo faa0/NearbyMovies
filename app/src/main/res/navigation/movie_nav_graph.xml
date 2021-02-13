@@ -39,9 +39,9 @@
         android:label="DetailFragment"
         tools:layout="@layout/fragment_detail">
         <argument
-            android:name="premiere"
+            android:name="cinema"
             android:defaultValue="@null"
-            app:argType="com.fara.nearbymovies.entity.Premiere"
+            app:argType="com.fara.nearbymovies.entity.Cinema"
             app:nullable="true" />
         <argument
             android:name="soon"

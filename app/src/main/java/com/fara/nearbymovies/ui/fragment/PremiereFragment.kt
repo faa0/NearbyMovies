@@ -45,7 +45,10 @@ class PremiereFragment : Fragment(R.layout.fragment_premiere) {
 
         movieViewModel.apply {
             soonLiveData.observe(viewLifecycleOwner, { soonAdapter.differ.submitList(it) })
-            premiereLiveData.observe(viewLifecycleOwner, { premiereAdapter.differ.submitList(it) })
+            premiereLiveData.observe(viewLifecycleOwner, {
+                premiereAdapter.differ.submitList(it)
+                insertCinemaList(it)
+            })
         }
 
         bind.soonPager.registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback() {
@@ -88,15 +91,15 @@ class PremiereFragment : Fragment(R.layout.fragment_premiere) {
             )
         }
 
-        premiereAdapter.setOnItemClickListener { position, premiere ->
+        premiereAdapter.setOnItemClickListener { position, cinema ->
             movieViewModel.positionPremiere = position
             GlobalScope.launch(Dispatchers.IO) { movieViewModel.updateDetailPremiere() }
 
-            GlobalScope.launch {
+            GlobalScope.launch(Dispatchers.Main) {
                 delay(200)
                 val bundle = Bundle().apply {
                     putSerializable("positionOfPremiereAdapter", position)
-                    putSerializable("premiere", premiere)
+                    putSerializable("cinema", cinema)
                     putSerializable("positionOfSoonPager", positionOfSoonPager)
                 }
                 findNavController().navigate(
@@ -111,8 +114,6 @@ class PremiereFragment : Fragment(R.layout.fragment_premiere) {
                 R.id.action_premiereFragment_to_chooseFragment
             )
         }
-
-//        GlobalScope.launch(Dispatchers.IO) { Log.d("tea", MayakRepositiory().getGenre()) }
 
         onBackPressed()
 

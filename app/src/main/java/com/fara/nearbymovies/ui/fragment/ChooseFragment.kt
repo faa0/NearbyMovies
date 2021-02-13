@@ -35,7 +35,7 @@ class ChooseFragment : Fragment(R.layout.fragment_choose) {
         bind.apply {
             tvCinemaCity.setOnClickListener {
                 GlobalScope.launch(Dispatchers.IO) {
-                    movieViewModel.setDataToLiveData()
+                    movieViewModel.setCinemaCityLiveData()
                 }
                 movieViewModel.premiereLiveData.observe(
                     viewLifecycleOwner,
