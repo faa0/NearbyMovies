@@ -8,5 +8,6 @@ class Constants {
         const val MULTIPLEX_ZP = "https://multiplex.ua/cinema/zaporizhia/avrora"
         const val MAYAK_BASE_URL = "https://vkino.com.ua"
         const val MAYAK_ZP = "https://vkino.com.ua/ua/cinema/zaporozhe/kinotema-mayakovskogo#afisha"
+        const val MAYAK_ZP_SCHEDULE = "https://bilet.vkino.com.ua/afisha/kinotema-mayakovskogo"
     }
 }

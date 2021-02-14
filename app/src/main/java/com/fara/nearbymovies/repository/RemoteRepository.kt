@@ -11,6 +11,40 @@ class RemoteRepository : ViewModel() {
 
     //*Mayakovskogo
 
+    fun getMayakovskogoSchedule(element: Element): MutableList<Session> {
+        val sessionsWithTimeList = element.text()
+            .replaceFirst(" лютого", "лютого")
+            .replaceAfter(" лютого", "")
+            .replaceAfterLast("грн", "")
+            .replace("Сьогодні, ", "")
+            .replaceBefore(",", "")
+            .replace(", ", "")
+            .replaceFirst(" ", "/")
+            .replaceBefore("/", "")
+            .replace("/", "")
+            .replace("грн ", "грн, ")
+            .replace(", ", "/")
+            .replace(" ", " вiд ")
+            .replace("…", "-")
+            .replace("/", ",")
+            .split(",")
+
+        val twoDList = mutableListOf<Session>()
+        val resultList = mutableListOf<Session>()
+
+        for (it in sessionsWithTimeList) {
+            twoDList += Session("2D", it)
+        }
+
+        var twoDString = ""
+        for (s in twoDList) {
+            twoDString += s.time_price + "\n"
+        }
+        if (twoDString.isNotEmpty()) resultList.add(Session("2D", twoDString))
+
+        return resultList
+    }
+
     fun getMayakovskogoGenre(doc: Document): String {
         return doc.getElementsByClass("film-block")
             .select("dl.film-data-list")

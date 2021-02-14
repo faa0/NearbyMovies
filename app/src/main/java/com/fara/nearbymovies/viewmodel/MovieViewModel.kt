@@ -9,6 +9,7 @@ import com.fara.nearbymovies.entity.Detail
 import com.fara.nearbymovies.entity.Soon
 import com.fara.nearbymovies.repository.LocalRepository
 import com.fara.nearbymovies.repository.RemoteRepository
+import com.fara.nearbymovies.utils.Constants
 import com.fara.nearbymovies.utils.Constants.Companion.CINEMA_CITY_BASE_URL
 import com.fara.nearbymovies.utils.Constants.Companion.MAYAK_ZP
 import com.fara.nearbymovies.utils.Constants.Companion.MULTIPLEX_ZP
@@ -81,6 +82,8 @@ class MovieViewModel(
 
     private fun setMayakDetailToPremiere(): Detail {
         val doc = Jsoup.connect(premiereList[positionPremiere].movie_url).get()
+        val docSchedule = Jsoup.connect(Constants.MAYAK_ZP_SCHEDULE).get()
+            .getElementsByClass("showstimes")[positionPremiere]
         remoteRepository.apply {
             detailPremiere = Detail(
                 null,
@@ -89,7 +92,7 @@ class MovieViewModel(
                 getMayakovskogoYear(doc),
                 getMayakovskogoCountry(doc),
                 getMayakovskogoGenre(doc),
-                null
+                getMayakovskogoSchedule(docSchedule)
             )
         }
         return detailPremiere
