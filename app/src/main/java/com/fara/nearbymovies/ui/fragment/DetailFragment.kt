@@ -66,12 +66,21 @@ class DetailFragment : Fragment(R.layout.fragment_detail) {
             movieViewModel.detailLiveDataPremiere.observe(viewLifecycleOwner, {
                 bind.apply {
                     it?.apply {
-                        Glide
-                            .with(ivBackground.context)
-                            .load(background)
-                            .apply(bitmapTransform(BlurTransformation(20, 1)))
-                            .diskCacheStrategy(DiskCacheStrategy.ALL)
-                            .into(ivBackground)
+                        if (!background.isNullOrEmpty()) {
+                            Glide
+                                .with(ivBackground.context)
+                                .load(background)
+                                .apply(bitmapTransform(BlurTransformation(20, 1)))
+                                .diskCacheStrategy(DiskCacheStrategy.ALL)
+                                .into(ivBackground)
+                        } else {
+                            Glide
+                                .with(ivBackground.context)
+                                .load(cinema?.poster_url)
+                                .apply(bitmapTransform(BlurTransformation(25, 3)))
+                                .diskCacheStrategy(DiskCacheStrategy.ALL)
+                                .into(ivBackground)
+                        }
                         tvDesc.text = description
                         tvYear.text = year
                         tvCountry.text = country

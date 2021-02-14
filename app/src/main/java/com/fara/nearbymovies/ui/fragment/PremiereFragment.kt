@@ -29,6 +29,7 @@ class PremiereFragment : Fragment(R.layout.fragment_premiere) {
     private lateinit var soonAdapter: SoonAdapter
     private var positionOfSoonPager = 0
     private var state = false
+    private lateinit var cinemaTitle: String
     private val args: PremiereFragmentArgs by navArgs()
 
     override fun onCreateView(
@@ -42,6 +43,7 @@ class PremiereFragment : Fragment(R.layout.fragment_premiere) {
         setupPremiereRecyclerView()
 
         state = args.state
+        cinemaTitle = args.cinemaTitle
 
         movieViewModel.apply {
             soonLiveData.observe(viewLifecycleOwner, { soonAdapter.differ.submitList(it) })
@@ -127,6 +129,8 @@ class PremiereFragment : Fragment(R.layout.fragment_premiere) {
                 R.id.action_premiereFragment_to_chooseFragment
             )
         }
+
+        bind.tvCity.text = cinemaTitle
 
         onBackPressed()
 
