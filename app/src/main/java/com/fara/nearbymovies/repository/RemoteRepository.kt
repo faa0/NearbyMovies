@@ -13,8 +13,10 @@ class RemoteRepository : ViewModel() {
 
     fun getMayakovskogoSchedule(element: Element): MutableList<Session> {
         val sessionsWithTimeList = element.text()
+            //need to remove
             .replaceFirst(" лютого", "лютого")
             .replaceAfter(" лютого", "")
+            //****
             .replaceAfterLast("грн", "")
             .replace("Сьогодні, ", "")
             .replaceBefore(",", "")
@@ -65,6 +67,10 @@ class RemoteRepository : ViewModel() {
 
     fun getMayakovskogoDescription(doc: Document): String {
         return doc.getElementsByClass("description-info").text()
+    }
+
+    fun getMayakovskogoTitle(doc: Document): String {
+        return doc.getElementsByClass("title mobile-hidden").text()
     }
 
     fun getMayakovskogoItemSize(): Int {
@@ -197,6 +203,10 @@ class RemoteRepository : ViewModel() {
         return doc.getElementsByClass("movie_description").text()
     }
 
+    fun getMultiplexTitle(doc: Document): String {
+        return doc.getElementsByClass("column2").select("h1#mvi_title").text()
+    }
+
     fun getMultiplexItemSize(): Int {
         val doc = Jsoup.connect(Constants.MULTIPLEX_ZP).get()
         val elements = doc.getElementsByClass("cinema_inside sch_date")
@@ -313,6 +323,10 @@ class RemoteRepository : ViewModel() {
         return (Constants.CINEMA_CITY_BASE_URL + elements
             .select("img.movie-video-container__img")
             .attr("src"))
+    }
+
+    fun getCinemaCityTitle(doc: Document): String {
+        return doc.getElementsByClass("movie-video-container__name-ukr").text()
     }
 
     fun getCinemaCityTitlePremiere(element: Element): String {

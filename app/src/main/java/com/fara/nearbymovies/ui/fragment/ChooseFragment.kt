@@ -36,6 +36,7 @@ class ChooseFragment : Fragment(R.layout.fragment_choose) {
             tvCinemaCity.setOnClickListener {
                 GlobalScope.launch(Dispatchers.IO) {
                     movieViewModel.setCinemaCityLiveData()
+                    movieViewModel.setCinemaCityListDetailToDb()
                 }
                 movieViewModel.premiereLiveData.observe(
                     viewLifecycleOwner,
@@ -46,17 +47,17 @@ class ChooseFragment : Fragment(R.layout.fragment_choose) {
             tvMultiplex.setOnClickListener {
                 GlobalScope.launch(Dispatchers.IO) {
                     movieViewModel.setMultiplexLiveData()
+                    movieViewModel.setMultiplexListDetailToDb()
                 }
-                movieViewModel.premiereLiveData.observe(
-                    viewLifecycleOwner,
+                movieViewModel.premiereLiveData.observe(viewLifecycleOwner,
                     { premiereAdapter.differ.submitList(it) })
                 movieViewModel.cinema = 1
-
             }
 
             tvMayakovskiy.setOnClickListener {
                 GlobalScope.launch(Dispatchers.IO) {
                     movieViewModel.setMayakLiveData()
+                    movieViewModel.setMayakListDetailToDb()
                 }
                 movieViewModel.premiereLiveData.observe(
                     viewLifecycleOwner,

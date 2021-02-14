@@ -8,7 +8,7 @@ import com.fara.nearbymovies.db.AppDatabase
 import com.fara.nearbymovies.repository.LocalRepository
 import com.fara.nearbymovies.repository.RemoteRepository
 import com.fara.nearbymovies.viewmodel.MovieViewModel
-import com.fara.nearbymovies.viewmodel.factory.MovieViewModelProviderFactory
+import com.fara.nearbymovies.viewmodel.MovieViewModelProviderFactory
 
 class MovieActivity : AppCompatActivity() {
 

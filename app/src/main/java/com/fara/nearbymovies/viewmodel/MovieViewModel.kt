@@ -3,7 +3,7 @@ package com.fara.nearbymovies.viewmodel
 import android.app.Application
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.viewModelScope
+import com.fara.nearbymovies.db.model.Movie
 import com.fara.nearbymovies.entity.Cinema
 import com.fara.nearbymovies.entity.Detail
 import com.fara.nearbymovies.entity.Soon
@@ -50,9 +50,7 @@ class MovieViewModel(
 
     fun getCinemas() = localRepository.getCinemas()
 
-    fun deleteCinema(cinema: Cinema) = viewModelScope.launch {
-        localRepository.deleteCinema(cinema)
-    }
+    fun deleteCinema(cinema: Cinema) = localRepository.deleteCinema(cinema)
 
     fun setMayakLiveData() {
         val doc = Jsoup.connect(MAYAK_ZP).get()
@@ -72,13 +70,38 @@ class MovieViewModel(
 
     fun updateDetailPremiere() {
         when (cinema) {
-            0 -> detailLiveDataPremiere.postValue(setCinemaCityDetailToPremiere())
-            1 -> detailLiveDataPremiere.postValue(setMultiplexDetailToPremiere())
-            2 -> detailLiveDataPremiere.postValue(setMayakDetailToPremiere())
+            0 -> {
+                detailLiveDataPremiere.postValue(setCinemaCityDetailToPremiere())
+
+            }
+            1 -> {
+                detailLiveDataPremiere.postValue(setMultiplexDetailToPremiere())
+
+            }
+            2 -> {
+                detailLiveDataPremiere.postValue(setMayakDetailToPremiere())
+            }
         }
     }
 
     fun updateDetailSoon() = detailLiveDataSoon.postValue(setCinemaCityDetailToSoon())
+
+    fun setMayakListDetailToDb() {
+        val movieList = mutableListOf<Movie>()
+        for (it in premiereList) {
+            val doc = Jsoup.connect(it.movie_url).get()
+            remoteRepository.apply {
+                movieList += Movie(
+                    "Zaporozhye",
+                    "Mayakovskogo",
+                    getMayakovskogoTitle(doc),
+                    getMayakovskogoSchedule(doc)
+                )
+                localRepository.upsertMovieListDetail(movieList)
+            }
+        }
+    }
+
 
     private fun setMayakDetailToPremiere(): Detail {
         val doc = Jsoup.connect(premiereList[positionPremiere].movie_url).get()
@@ -115,6 +138,22 @@ class MovieViewModel(
             count += 2
         }
         return premiereList
+    }
+
+    fun setMultiplexListDetailToDb() {
+        val movieList = mutableListOf<Movie>()
+        for (it in premiereList) {
+            val doc = Jsoup.connect(it.movie_url).get()
+            remoteRepository.apply {
+                movieList += Movie(
+                    "Zaporozhye",
+                    "Multiplex",
+                    getMultiplexTitle(doc),
+                    getMultiplexSchedule(doc)
+                )
+                localRepository.upsertMovieListDetail(movieList)
+            }
+        }
     }
 
     private fun setMultiplexDetailToPremiere(): Detail {
@@ -167,6 +206,22 @@ class MovieViewModel(
             )
         }
         return detailSoon
+    }
+
+    fun setCinemaCityListDetailToDb() {
+        val movieList = mutableListOf<Movie>()
+        for (it in premiereList) {
+            val doc = Jsoup.connect(it.movie_url).get()
+            remoteRepository.apply {
+                movieList += Movie(
+                    "Odessa",
+                    "CinemaCity",
+                    getCinemaCityTitle(doc),
+                    getCinemaCitySchedule(doc)
+                )
+                localRepository.upsertMovieListDetail(movieList)
+            }
+        }
     }
 
     private fun setCinemaCityDetailToPremiere(): Detail {

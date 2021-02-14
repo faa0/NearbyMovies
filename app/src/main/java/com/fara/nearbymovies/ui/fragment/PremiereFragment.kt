@@ -48,6 +48,9 @@ class PremiereFragment : Fragment(R.layout.fragment_premiere) {
             premiereLiveData.observe(viewLifecycleOwner, {
                 premiereAdapter.differ.submitList(it)
                 insertCinemaList(it)
+                GlobalScope.launch {
+                    setCinemaCityListDetailToDb()
+                }
             })
         }
 
