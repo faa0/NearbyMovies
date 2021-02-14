@@ -94,9 +94,8 @@ class PremiereFragment : Fragment(R.layout.fragment_premiere) {
             )
         }
 
-        premiereAdapter.setOnScheduleClickListener { city, title ->
+        premiereAdapter.setOnScheduleClickListener { title ->
             val bundle = Bundle().apply {
-                putSerializable("city", city)
                 putSerializable("title", title)
             }
             findNavController().navigate(
