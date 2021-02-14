@@ -44,6 +44,8 @@ class MovieViewModel(
 
     var cinema = 0
 
+    fun getSessionByTitle(title: String) = localRepository.getSessionByTitle(title)
+
     fun insertCinema(cinema: Cinema) = localRepository.upsert(cinema)
 
     fun insertCinemaList(cinema: List<Cinema>) = localRepository.upsertList(cinema)
@@ -90,18 +92,19 @@ class MovieViewModel(
         val movieList = mutableListOf<Movie>()
         for (it in premiereList) {
             val doc = Jsoup.connect(it.movie_url).get()
+            val docSchedule = Jsoup.connect(Constants.MAYAK_ZP_SCHEDULE).get()
+                .getElementsByClass("showstimes")[positionPremiere]
             remoteRepository.apply {
                 movieList += Movie(
                     "Zaporozhye",
                     "Mayakovskogo",
                     getMayakovskogoTitle(doc),
-                    getMayakovskogoSchedule(doc)
+                    getMayakovskogoSchedule(docSchedule)
                 )
                 localRepository.upsertMovieListDetail(movieList)
             }
         }
     }
-
 
     private fun setMayakDetailToPremiere(): Detail {
         val doc = Jsoup.connect(premiereList[positionPremiere].movie_url).get()

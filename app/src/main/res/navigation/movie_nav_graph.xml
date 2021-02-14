@@ -32,6 +32,13 @@
             app:exitAnim="@anim/slide_out_left"
             app:popEnterAnim="@anim/slide_in_left"
             app:popExitAnim="@anim/slide_out_right" />
+        <action
+            android:id="@+id/action_premiereFragment_to_compareFragment"
+            app:destination="@id/compareFragment"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right" />
     </fragment>
     <fragment
         android:id="@+id/detailFragment"
@@ -68,4 +75,15 @@
         android:id="@+id/chooseFragment"
         android:name="com.fara.nearbymovies.ui.fragment.ChooseFragment"
         android:label="ChooseFragment" />
+    <fragment
+        android:id="@+id/compareFragment"
+        android:name="com.fara.nearbymovies.ui.fragment.CompareFragment"
+        android:label="CompareFragment">
+        <argument
+            android:name="city"
+            app:argType="string" />
+        <argument
+            android:name="title"
+            app:argType="string" />
+    </fragment>
 </navigation>

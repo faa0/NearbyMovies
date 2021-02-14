@@ -94,6 +94,17 @@ class PremiereFragment : Fragment(R.layout.fragment_premiere) {
             )
         }
 
+        premiereAdapter.setOnScheduleClickListener { city, title ->
+            val bundle = Bundle().apply {
+                putSerializable("city", city)
+                putSerializable("title", title)
+            }
+            findNavController().navigate(
+                R.id.action_premiereFragment_to_compareFragment,
+                bundle
+            )
+        }
+
         premiereAdapter.setOnItemClickListener { position, cinema ->
             movieViewModel.positionPremiere = position
             GlobalScope.launch(Dispatchers.IO) { movieViewModel.updateDetailPremiere() }

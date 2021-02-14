@@ -11,5 +11,5 @@ data class Movie(
     val cinema: String = "",
     val title: String = "",
     @TypeConverters(Converter::class)
-    val session: List<Session>?,
+    val session: List<Session>,
 )

@@ -46,10 +46,19 @@ class PremiereAdapter : RecyclerView.Adapter<PremiereAdapter.PremiereViewHolder>
             layoutMain.setOnClickListener {
                 onItemClickListener?.let { it(position, premiere) }
             }
+            ivSchedule.setOnClickListener {
+                onScheduleClickListener?.let { it(premiere.city, premiere.title) }
+            }
         }
     }
 
     override fun getItemCount() = differ.currentList.size
+
+    private var onScheduleClickListener: ((String, String) -> Unit)? = null
+
+    fun setOnScheduleClickListener(listener: (String, String) -> Unit) {
+        onScheduleClickListener = listener
+    }
 
     private var onItemClickListener: ((Int, Cinema) -> Unit)? = null
 

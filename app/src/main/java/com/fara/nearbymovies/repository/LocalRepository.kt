@@ -15,4 +15,6 @@ class LocalRepository(private val db: AppDatabase) {
     fun deleteCinema(cinema: Cinema) = db.cinemaDao().deleteCinema(cinema)
 
     fun upsertMovieListDetail(movie: List<Movie>) = db.movieDao().upsert(movie)
+
+    fun getSessionByTitle(title: String) = db.movieDao().getSessionByTitle(title)
 }
