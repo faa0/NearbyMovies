@@ -52,7 +52,7 @@
             app:layout_constraintTop_toBottomOf="@+id/soonPager" />
 
         <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/rvPremiere"
+            android:id="@+id/rvPreview"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
@@ -65,7 +65,7 @@
             app:layout_constraintTop_toBottomOf="@+id/tvLabelToday"
             app:layout_constraintVertical_bias="0.0"
             app:spanCount="3"
-            tools:listitem="@layout/item_premiere" />
+            tools:listitem="@layout/item_preview" />
 
         <TextView
             android:id="@+id/tvCity"

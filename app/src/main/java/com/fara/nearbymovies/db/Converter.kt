@@ -1,7 +1,7 @@
 package com.fara.nearbymovies.db
 
 import androidx.room.TypeConverter
-import com.fara.nearbymovies.entity.Session
+import com.fara.nearbymovies.db.model.Session
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 

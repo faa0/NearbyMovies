@@ -7,9 +7,9 @@
 
     <fragment
         android:id="@+id/premiereFragment"
-        android:name="com.fara.nearbymovies.ui.fragment.PremiereFragment"
+        android:name="com.fara.nearbymovies.ui.fragments.PreviewFragment"
         android:label="PremiereFragment"
-        tools:layout="@layout/fragment_premiere">
+        tools:layout="@layout/fragment_preview">
         <action
             android:id="@+id/action_premiereFragment_to_detailFragment"
             app:destination="@id/detailFragment"
@@ -17,48 +17,12 @@
             app:exitAnim="@anim/slide_out_left"
             app:popEnterAnim="@anim/slide_in_left"
             app:popExitAnim="@anim/slide_out_right" />
-        <argument
-            android:name="positionOfSoonPager"
-            android:defaultValue="0"
-            app:argType="integer" />
-        <argument
-            android:name="state"
-            android:defaultValue="false"
-            app:argType="boolean" />
-        <action
-            android:id="@+id/action_premiereFragment_to_chooseFragment"
-            app:destination="@id/chooseFragment"
-            app:enterAnim="@anim/slide_in_right"
-            app:exitAnim="@anim/slide_out_left"
-            app:popEnterAnim="@anim/slide_in_left"
-            app:popExitAnim="@anim/slide_out_right" />
-        <action
-            android:id="@+id/action_premiereFragment_to_compareFragment"
-            app:destination="@id/compareFragment"
-            app:enterAnim="@anim/slide_in_right"
-            app:exitAnim="@anim/slide_out_left"
-            app:popEnterAnim="@anim/slide_in_left"
-            app:popExitAnim="@anim/slide_out_right" />
-        <argument
-            android:name="cinemaTitle"
-            android:defaultValue="CinemaCity "
-            app:argType="string" />
     </fragment>
     <fragment
         android:id="@+id/detailFragment"
-        android:name="com.fara.nearbymovies.ui.fragment.DetailFragment"
+        android:name="com.fara.nearbymovies.ui.fragments.DetailFragment"
         android:label="DetailFragment"
         tools:layout="@layout/fragment_detail">
-        <argument
-            android:name="cinema"
-            android:defaultValue="@null"
-            app:argType="com.fara.nearbymovies.entity.Cinema"
-            app:nullable="true" />
-        <argument
-            android:name="soon"
-            android:defaultValue="@null"
-            app:argType="com.fara.nearbymovies.entity.Soon"
-            app:nullable="true" />
         <action
             android:id="@+id/action_detailFragment_to_premiereFragment"
             app:destination="@id/premiereFragment"
@@ -66,33 +30,5 @@
             app:exitAnim="@anim/slide_out_right"
             app:popEnterAnim="@anim/slide_in_right"
             app:popExitAnim="@anim/slide_out_left" />
-        <argument
-            android:name="positionOfSoonPager"
-            android:defaultValue="0"
-            app:argType="integer" />
-        <argument
-            android:name="positionOfPremiereAdapter"
-            android:defaultValue="-1"
-            app:argType="integer" />
-    </fragment>
-    <fragment
-        android:id="@+id/chooseFragment"
-        android:name="com.fara.nearbymovies.ui.fragment.ChooseFragment"
-        android:label="ChooseFragment">
-        <action
-            android:id="@+id/action_chooseFragment_to_premiereFragment"
-            app:destination="@id/premiereFragment"
-            app:enterAnim="@anim/slide_in_left"
-            app:exitAnim="@anim/slide_out_right"
-            app:popEnterAnim="@anim/slide_in_right"
-            app:popExitAnim="@anim/slide_out_left" />
-    </fragment>
-    <fragment
-        android:id="@+id/compareFragment"
-        android:name="com.fara.nearbymovies.ui.fragment.CompareFragment"
-        android:label="CompareFragment">
-        <argument
-            android:name="title"
-            app:argType="string" />
     </fragment>
 </navigation>

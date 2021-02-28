@@ -1,19 +1,15 @@
 package com.fara.nearbymovies.db.dao
 
-import androidx.lifecycle.LiveData
 import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
-import androidx.room.Query
-import com.fara.nearbymovies.db.model.CompareMovie
-import com.fara.nearbymovies.db.model.Movie
+import com.fara.nearbymovies.db.model.Cinema
+import com.fara.nearbymovies.db.model.City
+import com.fara.nearbymovies.db.model.Preview
 
 @Dao
 interface MovieDao {
 
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
-    fun upsert(movie: List<Movie>)
-
-    @Query("SELECT city, cinema, session FROM movies_table WHERE title = :title")
-    fun getSessionByTitle(title: String): LiveData<List<CompareMovie>>
+    @Insert(onConflict = OnConflictStrategy.IGNORE)
+    fun insert(city: City, cinema: Cinema, preview: Preview)
 }
