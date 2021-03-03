@@ -1,5 +1,3 @@
 <resources>
     <string name="app_name">NearbyMovies</string>
-    <string name="today_in_cinema">СЬОГОДНІ У КІНОТЕАТРІ</string>
-    <string name="shown_in_the_cinema">СКОРО У КІНО</string>
 </resources>

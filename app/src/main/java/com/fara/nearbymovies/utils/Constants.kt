@@ -3,6 +3,12 @@ package com.fara.nearbymovies.utils
 class Constants {
     companion object {
 
+        const val ODESSA_BASE_ID = 1L
+        const val ZP_BASE_ID = 2L
+
+        const val CINEMA_CITY_BASE_ID = 1L
+        const val MULTIPLEX_BASE_ID = 2L
+
         const val ODESSA_BASE_TITLE = "Odessa"
         const val ZP_BASE_TITLE = "Zaporozhye"
 

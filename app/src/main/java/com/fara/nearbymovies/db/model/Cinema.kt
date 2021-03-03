@@ -20,7 +20,7 @@ import androidx.room.PrimaryKey
 )
 data class Cinema(
     @PrimaryKey(autoGenerate = true)
-    val id: Long,
+    val id: Long = 0,
     val city_id: Long,
     val cinema: String
 )

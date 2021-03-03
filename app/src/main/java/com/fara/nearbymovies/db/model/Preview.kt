@@ -20,8 +20,8 @@ import androidx.room.PrimaryKey
 )
 data class Preview(
     @PrimaryKey(autoGenerate = true)
-    val id: Int,
-    val cinema_id: Long,
+    val id: Long = 0,
+    val cinema_id: Long = 0,
     val title: String,
     val poster_url: String,
     val movie_url: String,

@@ -10,6 +10,6 @@ import androidx.room.PrimaryKey
 )
 data class City(
     @PrimaryKey(autoGenerate = true)
-    val id: Long,
+    val id: Long = 0,
     val city: String
 )

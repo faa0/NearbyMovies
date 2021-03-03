@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="today_in_cinema">СЬОГОДНІ У КІНОТЕАТРІ</string>
+    <string name="shown_in_the_cinema">СКОРО У КІНО</string>
+    <string name="please_connect_to_the_internet">Будь ласка, підключіться до Інтернету</string>
+</resources>
