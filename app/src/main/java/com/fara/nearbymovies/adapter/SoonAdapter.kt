@@ -1,6 +1,5 @@
 package com.fara.nearbymovies.adapter
 
-import android.annotation.SuppressLint
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.AsyncListDiffer
@@ -10,40 +9,39 @@ import com.bumptech.glide.Glide
 import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.bumptech.glide.load.resource.bitmap.CenterCrop
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
-import com.fara.nearbymovies.databinding.ItemPreviewBinding
+import com.fara.nearbymovies.databinding.ItemSoonBinding
 import com.fara.nearbymovies.db.model.Preview
 
-class PreviewAdapter : RecyclerView.Adapter<PreviewAdapter.PreviewViewHolder>() {
+class SoonAdapter : RecyclerView.Adapter<SoonAdapter.SoonViewHolder>() {
 
-    inner class PreviewViewHolder(val binding: ItemPreviewBinding) :
-        RecyclerView.ViewHolder(binding.root)
+    inner class SoonViewHolder(val binding: ItemSoonBinding) : RecyclerView.ViewHolder(binding.root)
 
     val differ = AsyncListDiffer(this, object : DiffUtil.ItemCallback<Preview>() {
         override fun areItemsTheSame(oldItem: Preview, newItem: Preview) = oldItem.id == newItem.id
 
-        @SuppressLint("DiffUtilEquals")
         override fun areContentsTheSame(oldItem: Preview, newItem: Preview) = oldItem == newItem
     })
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) = PreviewViewHolder(
-        ItemPreviewBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) = SoonViewHolder(
+        ItemSoonBinding.inflate(LayoutInflater.from(parent.context), parent, false)
     )
 
-    override fun onBindViewHolder(holder: PreviewAdapter.PreviewViewHolder, position: Int) {
+    override fun onBindViewHolder(holder: SoonAdapter.SoonViewHolder, position: Int) {
         bind(holder, position)
     }
 
     override fun getItemCount() = differ.currentList.size
 
-    private fun bind(holder: PreviewViewHolder, position: Int) {
-        val preview = differ.currentList[position]
+    private fun bind(holder: SoonAdapter.SoonViewHolder, position: Int) {
+        val soon = differ.currentList[position]
         holder.binding.apply {
-            Glide.with(ivPreview.context)
-                .load(preview.poster_url)
+            Glide.with(ivSoon.context)
+                .load(soon.poster_url)
                 .transform(CenterCrop(), RoundedCorners(10))
                 .diskCacheStrategy(DiskCacheStrategy.ALL)
-                .into(ivPreview)
-            tvTitlePreview.text = preview.title
+                .into(ivSoon)
+            tvTitle.text = soon.title
+            tvDateSoon.text = soon.date
         }
     }
 }

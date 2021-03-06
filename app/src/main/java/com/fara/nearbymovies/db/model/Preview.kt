@@ -26,5 +26,6 @@ data class Preview(
     val poster_url: String,
     val movie_url: String,
     val date: String? = null,
-    val age: String? = null
+    val age: String? = null,
+    val soon: Boolean
 )

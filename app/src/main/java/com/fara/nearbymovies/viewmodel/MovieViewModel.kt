@@ -40,15 +40,20 @@ class MovieViewModel @Inject constructor(
 
     init {
         viewModelScope.launch(Dispatchers.IO) {
-            val getCinemaCityMoviesFromDb = localRepo.getMoviesById(CINEMA_CITY_BASE_ID)
-            if (getCinemaCityMoviesFromDb != emptyList<Preview>())
-                previewLD.postValue(getCinemaCityMoviesFromDb)
+            val getCinemaCityPreviewFromDb = localRepo.getPreviewsById(CINEMA_CITY_BASE_ID)
+            val getCinemaCitySoonFromDb = localRepo.getSoonById(CINEMA_CITY_BASE_ID)
+            isCinemaCityNotEmpty(getCinemaCityPreviewFromDb, previewLD)
+            isCinemaCityNotEmpty(getCinemaCitySoonFromDb, soonLD)
 
-            if (hasInternetConnection(context)) {
+            if (checkInternetConnection(context)) {
                 val doc = Jsoup.connect(CINEMA_CITY_BASE_URL).get()
-                if (setCinemaCityToPreviewList(doc) != getCinemaCityMoviesFromDb) {
+                if (setCinemaCityToPreviewList(doc) != getCinemaCityPreviewFromDb) {
                     previewLD.postValue(setCinemaCityToPreviewList(doc))
                     insertCinemaCityPreviewToDb()
+                }
+                if (setCinemaCityToSoonList(doc) != getCinemaCitySoonFromDb) {
+                    soonLD.postValue(setCinemaCityToSoonList(doc))
+                    insertCinemaCitySoonToDb()
                 }
             } else {
                 viewModelScope.launch(Dispatchers.Main) {
@@ -65,6 +70,13 @@ class MovieViewModel @Inject constructor(
     val previewLD = MutableLiveData<List<Preview>>()
     private val previewList = mutableListOf<Preview>()
 
+    val soonLD = MutableLiveData<List<Preview>>()
+    private val soonList = mutableListOf<Preview>()
+
+    private fun isCinemaCityNotEmpty(list: List<Preview>, ld: MutableLiveData<List<Preview>>) {
+        if (list != emptyList<Preview>()) ld.postValue(list)
+    }
+
     private fun insertCinemaCityPreviewToDb() {
         previewList.forEach {
             localRepo.insert(
@@ -75,7 +87,8 @@ class MovieViewModel @Inject constructor(
                     title = it.title,
                     poster_url = it.poster_url,
                     movie_url = it.movie_url,
-                    age = it.age
+                    age = it.age,
+                    soon = false
                 )
             )
         }
@@ -93,7 +106,8 @@ class MovieViewModel @Inject constructor(
                     title = getCinemaCityTitlePremiere(it),
                     poster_url = getCinemaCityPosterUrlPremiere(it),
                     movie_url = getCinemaCityMovieUrlPremiere(it),
-                    age = getCinemaCityAgePremiere(it)
+                    age = getCinemaCityAgePremiere(it),
+                    soon = false
                 )
             }
             id++
@@ -101,7 +115,44 @@ class MovieViewModel @Inject constructor(
         return previewList
     }
 
-    private fun hasInternetConnection(context: Context): Boolean {
+    private fun insertCinemaCitySoonToDb() {
+        soonList.forEach {
+            localRepo.insert(
+                City(city = ODESSA_BASE_TITLE),
+                Cinema(city_id = ODESSA_BASE_ID, cinema = CINEMA_CITY_BASE_TITLE),
+                Preview(
+                    cinema_id = CINEMA_CITY_BASE_ID,
+                    title = it.title,
+                    poster_url = it.poster_url,
+                    movie_url = it.movie_url,
+                    date = it.date,
+                    soon = true
+                )
+            )
+        }
+    }
+
+    private fun setCinemaCityToSoonList(doc: Document): MutableList<Preview> {
+        val soon = doc.getElementsByClass("on-screen-soon")
+        var id = previewList.size + 1
+        soon.forEach {
+            remoteRepo.apply {
+                soonList += Preview(
+                    id = id.toLong(),
+                    cinema_id = ODESSA_BASE_ID,
+                    title = getCinemaCityTitleSoon(it),
+                    poster_url = getCinemaCityPosterUrlSoon(it),
+                    movie_url = getCinemaCityMovieUrlSoon(it),
+                    date = getCinemaCityDateSoon(it),
+                    soon = true
+                )
+            }
+            id++
+        }
+        return soonList
+    }
+
+    private fun checkInternetConnection(context: Context): Boolean {
         val connectivityManager =
             context.getSystemService(CONNECTIVITY_SERVICE) as ConnectivityManager
         val capabilities =

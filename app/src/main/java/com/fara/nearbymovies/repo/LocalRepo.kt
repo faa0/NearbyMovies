@@ -14,5 +14,7 @@ class LocalRepo @Inject constructor(
     fun insert(city: City, cinema: Cinema, preview: Preview) =
         db.getCinemaDao().insert(city, cinema, preview)
 
-    fun getMoviesById(id: Long) = db.getCinemaDao().getMoviesById(id)
+    fun getPreviewsById(id: Long) = db.getCinemaDao().getPreviewsById(id)
+
+    fun getSoonById(id: Long) = db.getCinemaDao().getSoonById(id)
 }

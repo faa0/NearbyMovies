@@ -14,6 +14,9 @@ interface MovieDao {
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     fun insert(city: City, cinema: Cinema, preview: Preview)
 
-    @Query("SELECT * FROM preview WHERE cinema_id = :id")
-    fun getMoviesById(id: Long): List<Preview>
+    @Query("SELECT * FROM preview WHERE cinema_id = :id AND soon == 0")
+    fun getPreviewsById(id: Long): List<Preview>
+
+    @Query("SELECT * FROM preview WHERE cinema_id = :id AND soon == 1")
+    fun getSoonById(id: Long): List<Preview>
 }
