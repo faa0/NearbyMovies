@@ -11,7 +11,7 @@ import com.fara.nearbymovies.db.model.Preview
 @Dao
 interface MovieDao {
 
-    @Insert(onConflict = OnConflictStrategy.IGNORE)
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insert(city: City, cinema: Cinema, preview: Preview)
 
     @Query("SELECT * FROM preview WHERE cinema_id = :id AND soon == 0")

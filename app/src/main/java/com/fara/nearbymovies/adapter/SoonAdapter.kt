@@ -30,10 +30,10 @@ class SoonAdapter : RecyclerView.Adapter<SoonAdapter.SoonViewHolder>() {
         bind(holder, position)
     }
 
-    override fun getItemCount() = differ.currentList.size
+    override fun getItemCount() = if (differ.currentList.isEmpty()) 0 else Integer.MAX_VALUE
 
     private fun bind(holder: SoonAdapter.SoonViewHolder, position: Int) {
-        val soon = differ.currentList[position]
+        val soon = differ.currentList[position % differ.currentList.size]
         holder.binding.apply {
             Glide.with(ivSoon.context)
                 .load(soon.poster_url)

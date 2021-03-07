@@ -94,7 +94,7 @@ class MovieViewModel @Inject constructor(
         }
     }
 
-    private fun setCinemaCityToPreviewList(doc: Document): MutableList<Preview> {
+    private fun setCinemaCityToPreviewList(doc: Document): List<Preview> {
         previewList.clear()
         val preview = doc.getElementsByClass("poster")
         var id = START_ID_FOR_PREVIEW
@@ -132,13 +132,14 @@ class MovieViewModel @Inject constructor(
         }
     }
 
-    private fun setCinemaCityToSoonList(doc: Document): MutableList<Preview> {
+    private fun setCinemaCityToSoonList(doc: Document): List<Preview> {
+        soonList.clear()
         val soon = doc.getElementsByClass("on-screen-soon")
-        var id = previewList.size + 1
+        var id = previewList.size + 1L
         soon.forEach {
             remoteRepo.apply {
                 soonList += Preview(
-                    id = id.toLong(),
+                    id = id,
                     cinema_id = ODESSA_BASE_ID,
                     title = getCinemaCityTitleSoon(it),
                     poster_url = getCinemaCityPosterUrlSoon(it),

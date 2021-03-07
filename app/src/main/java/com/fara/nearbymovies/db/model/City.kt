@@ -1,13 +1,9 @@
 package com.fara.nearbymovies.db.model
 
 import androidx.room.Entity
-import androidx.room.Index
 import androidx.room.PrimaryKey
 
-@Entity(
-    tableName = "city",
-    indices = [Index(value = ["city"], unique = true)]
-)
+@Entity(tableName = "city")
 data class City(
     @PrimaryKey(autoGenerate = true)
     val id: Long = 0,
