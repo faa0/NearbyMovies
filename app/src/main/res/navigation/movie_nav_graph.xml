@@ -30,5 +30,8 @@
             app:exitAnim="@anim/slide_out_right"
             app:popEnterAnim="@anim/slide_in_right"
             app:popExitAnim="@anim/slide_out_left" />
+        <argument
+            android:name="preview"
+            app:argType="com.fara.nearbymovies.db.model.Preview" />
     </fragment>
 </navigation>

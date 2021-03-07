@@ -13,10 +13,10 @@ class RemoteRepo @Inject constructor() : ViewModel() {
 
     fun getCinemaCitySchedule(doc: Document): MutableList<Session> {
         val listOfSessions = mutableListOf<Session>()
-        for (i in getCinemaCityListOfSessions(doc).indices) {
+        repeat(getCinemaCityListOfSessions(doc).indices.count()) {
             listOfSessions += Session(
-                getCinemaCityListOfSessions(doc)[i],
-                getCinemaCityListOfTimes(doc)[i]
+                getCinemaCityListOfSessions(doc)[it],
+                getCinemaCityListOfTimes(doc)[it]
             )
         }
         return listOfSessions
@@ -24,8 +24,8 @@ class RemoteRepo @Inject constructor() : ViewModel() {
 
     private fun getCinemaCityListOfTimes(doc: Document): List<String> {
         val listOfTimes = mutableListOf<String>()
-        for (i in getCinemaCityListOfSessions(doc).indices) {
-            val elements = doc.getElementsByClass("session__block")[i]
+        repeat(getCinemaCityListOfSessions(doc).indices.count()) {
+            val elements = doc.getElementsByClass("session__block")[it]
             listOfTimes += elements.select("div.session__schedule").text()
                 //need to delete space only
                 .replace("грн VIP ", "грнVIP\n")
@@ -40,7 +40,7 @@ class RemoteRepo @Inject constructor() : ViewModel() {
     private fun getCinemaCityListOfSessions(doc: Document): List<String> {
         val elements = doc.getElementsByClass("session__block")
         val listOfSessions = mutableListOf<String>()
-        for (e in elements) listOfSessions += e.select("div.session__type").text()
+        elements.forEach { listOfSessions += it.select("div.session__type").text() }
         return listOfSessions
     }
 
@@ -83,10 +83,7 @@ class RemoteRepo @Inject constructor() : ViewModel() {
     fun getCinemaCityDescription(doc: Document): String {
         val elements = doc.getElementsByClass("movie__description")
         var desc = ""
-        for (e in elements) {
-            desc = e.select("div")
-                .text()
-        }
+        elements.forEach { desc = it.select("div").text() }
         return desc
     }
 

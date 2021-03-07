@@ -1,6 +1,9 @@
 package com.fara.nearbymovies.db.model
 
-import androidx.room.*
+import androidx.room.Entity
+import androidx.room.ForeignKey
+import androidx.room.PrimaryKey
+import androidx.room.TypeConverters
 import retrofit2.Converter
 
 @Entity(
@@ -10,12 +13,11 @@ import retrofit2.Converter
         parentColumns = ["id"],
         childColumns = ["preview_id"],
         onDelete = ForeignKey.CASCADE
-    )],
-    indices = [Index(value = ["preview_id"])]
+    )]
 )
 data class Detail(
     @PrimaryKey(autoGenerate = true)
-    val id: Long,
+    val id: Long = 0,
     val preview_id: Long,
     val description: String,
     val year: String,

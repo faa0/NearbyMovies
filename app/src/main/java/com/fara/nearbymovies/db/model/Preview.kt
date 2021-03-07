@@ -4,6 +4,7 @@ import androidx.room.Entity
 import androidx.room.ForeignKey
 import androidx.room.Index
 import androidx.room.PrimaryKey
+import java.io.Serializable
 
 @Entity(
     tableName = "preview",
@@ -28,4 +29,4 @@ data class Preview(
     val date: String? = null,
     val age: String? = null,
     val soon: Boolean
-)
+) : Serializable

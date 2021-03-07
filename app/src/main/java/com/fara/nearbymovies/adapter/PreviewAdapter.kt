@@ -44,6 +44,14 @@ class PreviewAdapter : RecyclerView.Adapter<PreviewAdapter.PreviewViewHolder>() 
                 .diskCacheStrategy(DiskCacheStrategy.ALL)
                 .into(ivPreview)
             tvTitlePreview.text = preview.title
+
+            root.setOnClickListener { onItemClickListener?.let { it(position, preview) } }
         }
+    }
+
+    private var onItemClickListener: ((Int, Preview) -> Unit)? = null
+
+    fun setOnItemClickListener(listener: (Int, Preview) -> Unit) {
+        onItemClickListener = listener
     }
 }

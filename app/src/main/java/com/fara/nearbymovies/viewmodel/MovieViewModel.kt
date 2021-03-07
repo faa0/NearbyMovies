@@ -11,6 +11,7 @@ import androidx.lifecycle.viewModelScope
 import com.fara.nearbymovies.R
 import com.fara.nearbymovies.db.model.Cinema
 import com.fara.nearbymovies.db.model.City
+import com.fara.nearbymovies.db.model.Detail
 import com.fara.nearbymovies.db.model.Preview
 import com.fara.nearbymovies.repo.LocalRepo
 import com.fara.nearbymovies.repo.RemoteRepo
@@ -68,10 +69,31 @@ class MovieViewModel @Inject constructor(
     }
 
     val previewLD = MutableLiveData<List<Preview>>()
+    val detailPreviewLD = MutableLiveData<Detail>()
+    var positionPreview = 0
     private val previewList = mutableListOf<Preview>()
+    private lateinit var detailPremiere: Detail
 
     val soonLD = MutableLiveData<List<Preview>>()
     private val soonList = mutableListOf<Preview>()
+
+    fun updateDetailPreview() = detailPreviewLD.postValue(setCinemaCityDetailToPreview())
+
+    private fun setCinemaCityDetailToPreview(): Detail {
+        val doc = Jsoup.connect(previewList[positionPreview].movie_url).get()
+        remoteRepo.apply {
+            detailPremiere = Detail(
+                preview_id = positionPreview.toLong(),
+                description = getCinemaCityDescription(doc),
+                year = getCinemaCityYear(doc),
+                country = getCinemaCityCountry(doc),
+                genre = getCinemaCityGenre(doc),
+                background = getCinemaCityBackground(doc),
+                video_url = getCinemaCityVideoUrl(doc)
+            )
+        }
+        return detailPremiere
+    }
 
     private fun isCinemaCityNotEmpty(list: List<Preview>, ld: MutableLiveData<List<Preview>>) {
         if (list != emptyList<Preview>()) ld.postValue(list)
