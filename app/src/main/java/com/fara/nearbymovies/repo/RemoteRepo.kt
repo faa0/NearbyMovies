@@ -44,21 +44,21 @@ class RemoteRepo @Inject constructor() : ViewModel() {
         return listOfSessions
     }
 
-    fun getCinemaCityGenre(doc: Document) = doc
+    fun getCinemaCityGenre(doc: Document): String = doc
         .getElementsByClass("movie__info")
         .select("div.movie__short-description")
         .select("div.movie__about")
         .select("p")[2]
         .text()
 
-    fun getCinemaCityCountry(doc: Document) = doc
+    fun getCinemaCityCountry(doc: Document): String = doc
         .getElementsByClass("movie__info")
         .select("div.movie__short-description")
         .select("div.movie__about")
         .select("p")[1]
         .text()
 
-    fun getCinemaCityYear(doc: Document) = doc
+    fun getCinemaCityYear(doc: Document): String = doc
         .getElementsByClass("movie__info")
         .select("div.movie__short-description")
         .select("div.movie__about")
@@ -80,12 +80,8 @@ class RemoteRepo @Inject constructor() : ViewModel() {
             )
     }
 
-    fun getCinemaCityDescription(doc: Document): String {
-        val elements = doc.getElementsByClass("movie__description")
-        var desc = ""
-        elements.forEach { desc = it.select("div").text() }
-        return desc
-    }
+    fun getCinemaCityDescription(doc: Document): String =
+        doc.getElementsByClass("movie__description").text()
 
     fun getCinemaCityBackground(doc: Document): String {
         val elements = doc.getElementsByClass("movie-video-container")
@@ -93,10 +89,6 @@ class RemoteRepo @Inject constructor() : ViewModel() {
             .select("img.movie-video-container__img")
             .attr("src"))
     }
-
-    fun getCinemaCityTitle(doc: Document) = doc
-        .getElementsByClass("movie-video-container__name-ukr")
-        .text()
 
     fun getCinemaCityTitlePremiere(element: Element) = element
         .select("img.poster__img")
@@ -109,11 +101,11 @@ class RemoteRepo @Inject constructor() : ViewModel() {
         .select("img.poster__img")
         .attr("src")
 
-    fun getCinemaCityMovieUrlPremiere(element: Element) = element
+    fun getCinemaCityMovieUrlPremiere(element: Element): String = element
         .select("a")
         .attr("href")
 
-    fun getCinemaCityAgePremiere(element: Element) = element
+    fun getCinemaCityAgePremiere(element: Element): String = element
         .select("div.poster__info")
         .select("a.poster__name")
         .select("span.age-limitation")
@@ -123,7 +115,7 @@ class RemoteRepo @Inject constructor() : ViewModel() {
         .select("a")
         .attr("href")
 
-    fun getCinemaCityTitleSoon(element: Element) = element
+    fun getCinemaCityTitleSoon(element: Element): String = element
         .select("div.on-screen-soon")
         .select("div.on-screen-soon__title")
         .text()
@@ -133,7 +125,7 @@ class RemoteRepo @Inject constructor() : ViewModel() {
         .select("img")
         .attr("src")
 
-    fun getCinemaCityDateSoon(element: Element) = element
+    fun getCinemaCityDateSoon(element: Element): String = element
         .select("div.on-screen-soon")
         .select("div.on-screen-soon__date")
         .text()

@@ -79,7 +79,16 @@ class MovieViewModel @Inject constructor(
     private lateinit var detailPremiere: Detail
     private val detailList = mutableListOf<Detail>()
 
-    fun updateDetailPreview() = detailPreviewLD.postValue(getCinemaCityDetailPreview())
+    suspend fun updateDetailPreview() {
+        if (getCinemaCityDetailListFromDb().isEmpty()) {
+            detailPreviewLD.postValue(getCinemaCityDetailPreview())
+        } else {
+            detailPreviewLD.postValue(getCinemaCityDetailListFromDb()[positionPreview])
+        }
+    }
+
+    private suspend fun getCinemaCityDetailListFromDb() =
+        localRepo.getDetailList(CINEMA_CITY_BASE_ID)
 
     private fun getCinemaCityDetailPreviewList(): List<Detail> {
         previewList.forEach {
