@@ -18,7 +18,7 @@ import retrofit2.Converter
 data class Detail(
     @PrimaryKey(autoGenerate = true)
     val id: Long = 0,
-    val preview_id: Long,
+    val preview_id: Long = 0,
     val description: String,
     val year: String,
     val country: String,

@@ -49,9 +49,7 @@ class PreviewFragment : Fragment(R.layout.fragment_preview) {
             previewAdapter.setOnItemClickListener { position, preview ->
 
                 viewModel.positionPreview = position
-                lifecycleScope.launch(Dispatchers.IO) {
-                    viewModel.updateDetailPreview()
-                }
+                lifecycleScope.launch(Dispatchers.IO) { viewModel.updateDetailPreview() }
 
                 val bundle = Bundle().apply {
                     putSerializable("preview", preview)

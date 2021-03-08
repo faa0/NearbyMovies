@@ -22,7 +22,7 @@ class AppModule {
         context,
         AppDatabase::class.java,
         "cinema_db.db",
-    ).allowMainThreadQueries().build()
+    ).build()
 
     @Singleton
     @Provides

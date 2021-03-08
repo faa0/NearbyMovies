@@ -6,10 +6,11 @@ import androidx.room.TypeConverters
 import com.fara.nearbymovies.db.dao.MovieDao
 import com.fara.nearbymovies.db.model.Cinema
 import com.fara.nearbymovies.db.model.City
+import com.fara.nearbymovies.db.model.Detail
 import com.fara.nearbymovies.db.model.Preview
 
 @Database(
-    entities = [City::class, Cinema::class, Preview::class],
+    entities = [City::class, Cinema::class, Preview::class, Detail::class],
     version = 1,
     exportSchema = false
 )

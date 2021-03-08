@@ -4,6 +4,7 @@ import android.content.Context
 import android.content.Context.CONNECTIVITY_SERVICE
 import android.net.ConnectivityManager
 import android.net.NetworkCapabilities.*
+import android.util.Log
 import android.widget.Toast
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -48,14 +49,16 @@ class MovieViewModel @Inject constructor(
 
             if (checkInternetConnection(context)) {
                 val doc = Jsoup.connect(CINEMA_CITY_BASE_URL).get()
-                if (setCinemaCityToPreviewList(doc) != getCinemaCityPreviewFromDb) {
-                    previewLD.postValue(setCinemaCityToPreviewList(doc))
+                if (getCinemaCityPreviewList(doc) != getCinemaCityPreviewFromDb) {
+                    previewLD.postValue(getCinemaCityPreviewList(doc))
                     insertCinemaCityPreviewToDb()
                 }
-                if (setCinemaCityToSoonList(doc) != getCinemaCitySoonFromDb) {
-                    soonLD.postValue(setCinemaCityToSoonList(doc))
+                if (getCinemaCitySoonList(doc) != getCinemaCitySoonFromDb) {
+                    soonLD.postValue(getCinemaCitySoonList(doc))
                     insertCinemaCitySoonToDb()
                 }
+
+                Log.d("tea", getCinemaCityDetailPreviewList().toString())
             } else {
                 viewModelScope.launch(Dispatchers.Main) {
                     Toast.makeText(
@@ -69,21 +72,40 @@ class MovieViewModel @Inject constructor(
     }
 
     val previewLD = MutableLiveData<List<Preview>>()
-    val detailPreviewLD = MutableLiveData<Detail>()
-    var positionPreview = 0
     private val previewList = mutableListOf<Preview>()
-    private lateinit var detailPremiere: Detail
 
     val soonLD = MutableLiveData<List<Preview>>()
     private val soonList = mutableListOf<Preview>()
 
-    fun updateDetailPreview() = detailPreviewLD.postValue(setCinemaCityDetailToPreview())
+    val detailPreviewLD = MutableLiveData<Detail>()
+    var positionPreview = 0
+    private lateinit var detailPremiere: Detail
+    private val detailList = mutableListOf<Detail>()
 
-    private fun setCinemaCityDetailToPreview(): Detail {
+    fun updateDetailPreview() = detailPreviewLD.postValue(getCinemaCityDetailPreview())
+
+    private fun getCinemaCityDetailPreviewList(): List<Detail> {
+        previewList.forEach {
+            val doc = Jsoup.connect(it.movie_url).get()
+            remoteRepo.apply {
+                detailList += Detail(
+                    preview_id = 0,
+                    description = getCinemaCityDescription(doc),
+                    year = getCinemaCityYear(doc),
+                    country = getCinemaCityCountry(doc),
+                    genre = getCinemaCityGenre(doc),
+                    background = getCinemaCityBackground(doc),
+                    video_url = getCinemaCityVideoUrl(doc)
+                )
+            }
+        }
+        return detailList
+    }
+
+    private fun getCinemaCityDetailPreview(): Detail {
         val doc = Jsoup.connect(previewList[positionPreview].movie_url).get()
         remoteRepo.apply {
             detailPremiere = Detail(
-                preview_id = positionPreview.toLong(),
                 description = getCinemaCityDescription(doc),
                 year = getCinemaCityYear(doc),
                 country = getCinemaCityCountry(doc),
@@ -99,7 +121,7 @@ class MovieViewModel @Inject constructor(
         if (list != emptyList<Preview>()) ld.postValue(list)
     }
 
-    private fun insertCinemaCityPreviewToDb() {
+    private suspend fun insertCinemaCityPreviewToDb() {
         previewList.forEach {
             localRepo.insert(
                 City(city = ODESSA_BASE_TITLE),
@@ -116,7 +138,7 @@ class MovieViewModel @Inject constructor(
         }
     }
 
-    private fun setCinemaCityToPreviewList(doc: Document): List<Preview> {
+    private fun getCinemaCityPreviewList(doc: Document): List<Preview> {
         previewList.clear()
         val preview = doc.getElementsByClass("poster")
         var id = START_ID_FOR_PREVIEW
@@ -137,7 +159,7 @@ class MovieViewModel @Inject constructor(
         return previewList
     }
 
-    private fun insertCinemaCitySoonToDb() {
+    private suspend fun insertCinemaCitySoonToDb() {
         soonList.forEach {
             localRepo.insert(
                 City(city = ODESSA_BASE_TITLE),
@@ -154,7 +176,7 @@ class MovieViewModel @Inject constructor(
         }
     }
 
-    private fun setCinemaCityToSoonList(doc: Document): List<Preview> {
+    private fun getCinemaCitySoonList(doc: Document): List<Preview> {
         soonList.clear()
         val soon = doc.getElementsByClass("on-screen-soon")
         var id = previewList.size + 1L
