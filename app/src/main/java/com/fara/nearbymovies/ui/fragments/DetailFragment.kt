@@ -92,7 +92,7 @@ class DetailFragment : Fragment(R.layout.fragment_detail) {
 
                     viewModel.detailPreviewLD.postValue(
                         Detail(
-                            preview_id = -1, description = "", year = "", country = "", genre = ""
+                            movie_url = "", description = "", year = "", country = "", genre = ""
                         )
                     )
                 }

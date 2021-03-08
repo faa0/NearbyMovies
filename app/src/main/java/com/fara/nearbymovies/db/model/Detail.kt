@@ -10,15 +10,15 @@ import retrofit2.Converter
     tableName = "detail",
     foreignKeys = [ForeignKey(
         entity = Preview::class,
-        parentColumns = ["id"],
-        childColumns = ["preview_id"],
+        parentColumns = ["movie_url"],
+        childColumns = ["movie_url"],
         onDelete = ForeignKey.CASCADE
     )]
 )
 data class Detail(
-    @PrimaryKey(autoGenerate = true)
-    val id: Long = 0,
-    val preview_id: Long = 0,
+    @PrimaryKey
+    val movie_url: String,
+    val cinema_id: Long = 0,
     val description: String,
     val year: String,
     val country: String,

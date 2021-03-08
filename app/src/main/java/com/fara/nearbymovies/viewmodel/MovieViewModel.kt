@@ -4,7 +4,6 @@ import android.content.Context
 import android.content.Context.CONNECTIVITY_SERVICE
 import android.net.ConnectivityManager
 import android.net.NetworkCapabilities.*
-import android.util.Log
 import android.widget.Toast
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -36,14 +35,11 @@ class MovieViewModel @Inject constructor(
     @ApplicationContext context: Context
 ) : ViewModel() {
 
-    companion object {
-        const val START_ID_FOR_PREVIEW = 1L
-    }
-
     init {
         viewModelScope.launch(Dispatchers.IO) {
             val getCinemaCityPreviewFromDb = localRepo.getPreviewsById(CINEMA_CITY_BASE_ID)
             val getCinemaCitySoonFromDb = localRepo.getSoonById(CINEMA_CITY_BASE_ID)
+            val getCinemaCityDetailListFromDb = localRepo.getDetailList(CINEMA_CITY_BASE_ID)
             isCinemaCityNotEmpty(getCinemaCityPreviewFromDb, previewLD)
             isCinemaCityNotEmpty(getCinemaCitySoonFromDb, soonLD)
 
@@ -57,8 +53,9 @@ class MovieViewModel @Inject constructor(
                     soonLD.postValue(getCinemaCitySoonList(doc))
                     insertCinemaCitySoonToDb()
                 }
-
-                Log.d("tea", getCinemaCityDetailPreviewList().toString())
+                if (getCinemaCityDetailPreviewList() != getCinemaCityDetailListFromDb) {
+                    localRepo.insertDetail(getCinemaCityDetailPreviewList())
+                }
             } else {
                 viewModelScope.launch(Dispatchers.Main) {
                     Toast.makeText(
@@ -89,13 +86,14 @@ class MovieViewModel @Inject constructor(
             val doc = Jsoup.connect(it.movie_url).get()
             remoteRepo.apply {
                 detailList += Detail(
-                    preview_id = 0,
+                    movie_url = it.movie_url,
                     description = getCinemaCityDescription(doc),
                     year = getCinemaCityYear(doc),
                     country = getCinemaCityCountry(doc),
                     genre = getCinemaCityGenre(doc),
                     background = getCinemaCityBackground(doc),
-                    video_url = getCinemaCityVideoUrl(doc)
+                    video_url = getCinemaCityVideoUrl(doc),
+                    cinema_id = CINEMA_CITY_BASE_ID
                 )
             }
         }
@@ -106,6 +104,7 @@ class MovieViewModel @Inject constructor(
         val doc = Jsoup.connect(previewList[positionPreview].movie_url).get()
         remoteRepo.apply {
             detailPremiere = Detail(
+                movie_url = previewList[positionPreview].movie_url,
                 description = getCinemaCityDescription(doc),
                 year = getCinemaCityYear(doc),
                 country = getCinemaCityCountry(doc),
@@ -141,11 +140,9 @@ class MovieViewModel @Inject constructor(
     private fun getCinemaCityPreviewList(doc: Document): List<Preview> {
         previewList.clear()
         val preview = doc.getElementsByClass("poster")
-        var id = START_ID_FOR_PREVIEW
         preview.forEach {
             remoteRepo.apply {
                 previewList += Preview(
-                    id = id,
                     cinema_id = ODESSA_BASE_ID,
                     title = getCinemaCityTitlePremiere(it),
                     poster_url = getCinemaCityPosterUrlPremiere(it),
@@ -154,7 +151,6 @@ class MovieViewModel @Inject constructor(
                     soon = false
                 )
             }
-            id++
         }
         return previewList
     }
@@ -179,11 +175,9 @@ class MovieViewModel @Inject constructor(
     private fun getCinemaCitySoonList(doc: Document): List<Preview> {
         soonList.clear()
         val soon = doc.getElementsByClass("on-screen-soon")
-        var id = previewList.size + 1L
         soon.forEach {
             remoteRepo.apply {
                 soonList += Preview(
-                    id = id,
                     cinema_id = ODESSA_BASE_ID,
                     title = getCinemaCityTitleSoon(it),
                     poster_url = getCinemaCityPosterUrlSoon(it),
@@ -192,7 +186,6 @@ class MovieViewModel @Inject constructor(
                     soon = true
                 )
             }
-            id++
         }
         return soonList
     }

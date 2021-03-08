@@ -19,7 +19,8 @@ class PreviewAdapter : RecyclerView.Adapter<PreviewAdapter.PreviewViewHolder>() 
         RecyclerView.ViewHolder(binding.root)
 
     val differ = AsyncListDiffer(this, object : DiffUtil.ItemCallback<Preview>() {
-        override fun areItemsTheSame(oldItem: Preview, newItem: Preview) = oldItem.id == newItem.id
+        override fun areItemsTheSame(oldItem: Preview, newItem: Preview) =
+            oldItem.movie_url == newItem.movie_url
 
         @SuppressLint("DiffUtilEquals")
         override fun areContentsTheSame(oldItem: Preview, newItem: Preview) = oldItem == newItem

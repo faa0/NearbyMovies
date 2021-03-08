@@ -16,15 +16,14 @@ import java.io.Serializable
     )],
     indices = [
         Index(value = ["cinema_id"]),
-        Index(value = ["title"], unique = true)
+        Index(value = ["movie_url"], unique = true)
     ]
 )
 data class Preview(
-    @PrimaryKey(autoGenerate = true)
-    val id: Long = 0,
     val cinema_id: Long = 0,
     val title: String,
     val poster_url: String,
+    @PrimaryKey
     val movie_url: String,
     val date: String? = null,
     val age: String? = null,
