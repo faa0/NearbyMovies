@@ -13,7 +13,13 @@ import com.fara.nearbymovies.db.model.Preview
 interface MovieDao {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insert(city: City, cinema: Cinema, preview: Preview)
+    suspend fun insertCity(city: City)
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insertCinema(cinema: Cinema)
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insertPreview(preview: Preview)
 
     @Query("SELECT * FROM preview WHERE cinema_id = :id AND soon == 0")
     suspend fun getPreviewsById(id: Long): List<Preview>
@@ -26,4 +32,10 @@ interface MovieDao {
 
     @Query("SELECT * FROM detail WHERE cinema_id = :id")
     suspend fun getDetailList(id: Long): List<Detail>
+
+    @Query("DELETE FROM preview WHERE cinema_id = :id AND soon = 0")
+    suspend fun deleteAllPreviewByCinemaId(id: Long)
+
+    @Query("DELETE FROM preview WHERE cinema_id = :id AND soon = 1")
+    suspend fun deleteAllSoonByCinemaId(id: Long)
 }

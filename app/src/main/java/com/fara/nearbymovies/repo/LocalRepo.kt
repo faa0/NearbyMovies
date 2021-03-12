@@ -12,8 +12,11 @@ class LocalRepo @Inject constructor(
     private val db: AppDatabase
 ) : ViewModel() {
 
-    suspend fun insert(city: City, cinema: Cinema, preview: Preview) =
-        db.getCinemaDao().insert(city, cinema, preview)
+    suspend fun insertCity(city: City) = db.getCinemaDao().insertCity(city)
+
+    suspend fun insertCinema(cinema: Cinema) = db.getCinemaDao().insertCinema(cinema)
+
+    suspend fun insertPreview(preview: Preview) = db.getCinemaDao().insertPreview(preview)
 
     suspend fun getPreviewsById(id: Long) = db.getCinemaDao().getPreviewsById(id)
 
@@ -23,4 +26,9 @@ class LocalRepo @Inject constructor(
         db.getCinemaDao().insertDetailList(detailList)
 
     suspend fun getDetailList(id: Long) = db.getCinemaDao().getDetailList(id)
+
+    suspend fun deleteAllPreviewByCinemaId(id: Long) =
+        db.getCinemaDao().deleteAllPreviewByCinemaId(id)
+
+    suspend fun deleteAllSoonByCinemaId(id: Long) = db.getCinemaDao().deleteAllSoonByCinemaId(id)
 }

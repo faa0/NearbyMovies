@@ -13,7 +13,10 @@ import androidx.room.PrimaryKey
         childColumns = ["city_id"],
         onDelete = ForeignKey.CASCADE
     )],
-    indices = [Index(value = ["city_id"])]
+    indices = [
+        Index(value = ["city_id"]),
+        Index(value = ["cinema"], unique = true)
+    ]
 )
 data class Cinema(
     @PrimaryKey(autoGenerate = true)

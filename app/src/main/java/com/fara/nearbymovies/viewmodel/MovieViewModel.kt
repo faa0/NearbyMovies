@@ -37,32 +37,36 @@ class MovieViewModel @Inject constructor(
 
     init {
         viewModelScope.launch(Dispatchers.IO) {
-            val getCinemaCityPreviewFromDb = localRepo.getPreviewsById(CINEMA_CITY_BASE_ID)
-            val getCinemaCitySoonFromDb = localRepo.getSoonById(CINEMA_CITY_BASE_ID)
-            val getCinemaCityDetailListFromDb = localRepo.getDetailList(CINEMA_CITY_BASE_ID)
-            isCinemaCityNotEmpty(getCinemaCityPreviewFromDb, previewLD)
-            isCinemaCityNotEmpty(getCinemaCitySoonFromDb, soonLD)
+            localRepo.apply {
+                val getCinemaCityPreviewFromDb = getPreviewsById(CINEMA_CITY_BASE_ID)
+                val getCinemaCitySoonFromDb = getSoonById(CINEMA_CITY_BASE_ID)
+                val getCinemaCityDetailListFromDb = getDetailList(CINEMA_CITY_BASE_ID)
+                isCinemaCityNotEmpty(getCinemaCityPreviewFromDb, previewLD)
+                isCinemaCityNotEmpty(getCinemaCitySoonFromDb, soonLD)
 
-            if (checkInternetConnection(context)) {
-                val doc = Jsoup.connect(CINEMA_CITY_BASE_URL).get()
-                if (getCinemaCityPreviewList(doc) != getCinemaCityPreviewFromDb) {
-                    previewLD.postValue(getCinemaCityPreviewList(doc))
-                    insertCinemaCityPreviewToDb()
-                }
-                if (getCinemaCitySoonList(doc) != getCinemaCitySoonFromDb) {
-                    soonLD.postValue(getCinemaCitySoonList(doc))
-                    insertCinemaCitySoonToDb()
-                }
-                if (getCinemaCityDetailPreviewList() != getCinemaCityDetailListFromDb) {
-                    localRepo.insertDetail(getCinemaCityDetailPreviewList())
-                }
-            } else {
-                viewModelScope.launch(Dispatchers.Main) {
-                    Toast.makeText(
-                        context,
-                        context.getString(R.string.please_connect_to_the_internet),
-                        Toast.LENGTH_LONG
-                    ).show()
+                if (checkInternetConnection(context)) {
+                    val doc = Jsoup.connect(CINEMA_CITY_BASE_URL).get()
+                    if (getCinemaCityPreviewList(doc) != getCinemaCityPreviewFromDb) {
+                        deleteAllPreviewByCinemaId(CINEMA_CITY_BASE_ID)
+                        previewLD.postValue(getCinemaCityPreviewList(doc))
+                        insertCinemaCityPreviewToDb()
+                    }
+                    if (getCinemaCitySoonList(doc) != getCinemaCitySoonFromDb) {
+                        deleteAllSoonByCinemaId(CINEMA_CITY_BASE_ID)
+                        soonLD.postValue(getCinemaCitySoonList(doc))
+                        insertCinemaCitySoonToDb()
+                    }
+                    if (getCinemaCityDetailPreviewList() != getCinemaCityDetailListFromDb) {
+                        insertDetail(getCinemaCityDetailPreviewList())
+                    }
+                } else {
+                    viewModelScope.launch(Dispatchers.Main) {
+                        Toast.makeText(
+                            context,
+                            context.getString(R.string.please_connect_to_the_internet),
+                            Toast.LENGTH_LONG
+                        ).show()
+                    }
                 }
             }
         }
@@ -130,19 +134,21 @@ class MovieViewModel @Inject constructor(
     }
 
     private suspend fun insertCinemaCityPreviewToDb() {
-        previewList.forEach {
-            localRepo.insert(
-                City(city = ODESSA_BASE_TITLE),
-                Cinema(city_id = ODESSA_BASE_ID, cinema = CINEMA_CITY_BASE_TITLE),
-                Preview(
-                    cinema_id = CINEMA_CITY_BASE_ID,
-                    title = it.title,
-                    poster_url = it.poster_url,
-                    movie_url = it.movie_url,
-                    age = it.age,
-                    soon = false
+        localRepo.apply {
+            insertCity(City(city = ODESSA_BASE_TITLE))
+            insertCinema(Cinema(city_id = ODESSA_BASE_ID, cinema = CINEMA_CITY_BASE_TITLE))
+            previewList.forEach {
+                insertPreview(
+                    Preview(
+                        cinema_id = CINEMA_CITY_BASE_ID,
+                        title = it.title,
+                        poster_url = it.poster_url,
+                        movie_url = it.movie_url,
+                        age = it.age,
+                        soon = false
+                    )
                 )
-            )
+            }
         }
     }
 
@@ -165,19 +171,19 @@ class MovieViewModel @Inject constructor(
     }
 
     private suspend fun insertCinemaCitySoonToDb() {
-        soonList.forEach {
-            localRepo.insert(
-                City(city = ODESSA_BASE_TITLE),
-                Cinema(city_id = ODESSA_BASE_ID, cinema = CINEMA_CITY_BASE_TITLE),
-                Preview(
-                    cinema_id = CINEMA_CITY_BASE_ID,
-                    title = it.title,
-                    poster_url = it.poster_url,
-                    movie_url = it.movie_url,
-                    date = it.date,
-                    soon = true
+        localRepo.apply {
+            soonList.forEach {
+                insertPreview(
+                    Preview(
+                        cinema_id = CINEMA_CITY_BASE_ID,
+                        title = it.title,
+                        poster_url = it.poster_url,
+                        movie_url = it.movie_url,
+                        date = it.date,
+                        soon = true
+                    )
                 )
-            )
+            }
         }
     }
 
