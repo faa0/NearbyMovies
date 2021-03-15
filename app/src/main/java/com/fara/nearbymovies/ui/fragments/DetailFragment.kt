@@ -16,6 +16,7 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.bumptech.glide.load.resource.bitmap.CenterCrop
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.fara.nearbymovies.R
+import com.fara.nearbymovies.adapter.SessionAdapter
 import com.fara.nearbymovies.databinding.FragmentDetailBinding
 import com.fara.nearbymovies.db.model.Detail
 import com.fara.nearbymovies.viewmodel.MovieViewModel
@@ -25,6 +26,7 @@ import dagger.hilt.android.AndroidEntryPoint
 class DetailFragment : Fragment(R.layout.fragment_detail) {
 
     private lateinit var binding: FragmentDetailBinding
+    private lateinit var sessionAdapter: SessionAdapter
     private val viewModel: MovieViewModel by activityViewModels()
     private val args: DetailFragmentArgs by navArgs()
 
@@ -39,6 +41,8 @@ class DetailFragment : Fragment(R.layout.fragment_detail) {
         super.onViewCreated(view, savedInstanceState)
 
         val preview = args.preview
+
+        setupSessionRecyclerView()
 
         binding.apply {
 
@@ -68,11 +72,17 @@ class DetailFragment : Fragment(R.layout.fragment_detail) {
                         btnPlayVideo.visibility = View.VISIBLE
                         onClickButtonPlayVideo(video_url)
                     }
+                    sessionAdapter.differ.submitList(session)
                 }
             })
         }
 
         onBackPressed()
+    }
+
+    private fun setupSessionRecyclerView() {
+        sessionAdapter = SessionAdapter()
+        binding.rvSession.adapter = sessionAdapter
     }
 
     private fun onClickButtonPlayVideo(videoUrl: String) {

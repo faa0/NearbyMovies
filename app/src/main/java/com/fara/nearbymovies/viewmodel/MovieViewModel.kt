@@ -107,7 +107,8 @@ class MovieViewModel @Inject constructor(
                     genre = getCinemaCityGenre(doc),
                     background = getCinemaCityBackground(doc),
                     video_url = getCinemaCityVideoUrl(doc),
-                    cinema_id = CINEMA_CITY_BASE_ID
+                    cinema_id = CINEMA_CITY_BASE_ID,
+                    session = getCinemaCitySchedule(doc)
                 )
             }
         }
@@ -124,7 +125,8 @@ class MovieViewModel @Inject constructor(
                 country = getCinemaCityCountry(doc),
                 genre = getCinemaCityGenre(doc),
                 background = getCinemaCityBackground(doc),
-                video_url = getCinemaCityVideoUrl(doc)
+                video_url = getCinemaCityVideoUrl(doc),
+                session = getCinemaCitySchedule(doc)
             )
         }
         return detailPremiere
