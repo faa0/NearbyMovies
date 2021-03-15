@@ -31,4 +31,8 @@ class LocalRepo @Inject constructor(
         db.getCinemaDao().deleteAllPreviewByCinemaId(id)
 
     suspend fun deleteAllSoonByCinemaId(id: Long) = db.getCinemaDao().deleteAllSoonByCinemaId(id)
+
+    suspend fun getCityNamesList() = db.getCinemaDao().getCityNamesList()
+
+    suspend fun getCinemaNamesList() = db.getCinemaDao().getCinemaNamesList()
 }

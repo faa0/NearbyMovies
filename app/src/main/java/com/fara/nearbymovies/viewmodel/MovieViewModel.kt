@@ -46,6 +46,7 @@ class MovieViewModel @Inject constructor(
 
                 if (checkInternetConnection(context)) {
                     val doc = Jsoup.connect(CINEMA_CITY_BASE_URL).get()
+
                     if (getCinemaCityPreviewList(doc) != getCinemaCityPreviewFromDb) {
                         deleteAllPreviewByCinemaId(CINEMA_CITY_BASE_ID)
                         previewLD.postValue(getCinemaCityPreviewList(doc))
@@ -135,8 +136,13 @@ class MovieViewModel @Inject constructor(
 
     private suspend fun insertCinemaCityPreviewToDb() {
         localRepo.apply {
-            insertCity(City(city = ODESSA_BASE_TITLE))
-            insertCinema(Cinema(city_id = ODESSA_BASE_ID, cinema = CINEMA_CITY_BASE_TITLE))
+
+            if (!getCityNamesList().contains(ODESSA_BASE_TITLE))
+                insertCity(City(city = ODESSA_BASE_TITLE))
+
+            if (!getCinemaNamesList().contains(CINEMA_CITY_BASE_TITLE))
+                insertCinema(Cinema(city_id = ODESSA_BASE_ID, cinema = CINEMA_CITY_BASE_TITLE))
+
             previewList.forEach {
                 insertPreview(
                     Preview(

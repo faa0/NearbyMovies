@@ -38,4 +38,10 @@ interface MovieDao {
 
     @Query("DELETE FROM preview WHERE cinema_id = :id AND soon = 1")
     suspend fun deleteAllSoonByCinemaId(id: Long)
+
+    @Query("SELECT city FROM city")
+    suspend fun getCityNamesList(): List<String>
+
+    @Query("SELECT cinema FROM cinema")
+    suspend fun getCinemaNamesList(): List<String>
 }
