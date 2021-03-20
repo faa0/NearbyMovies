@@ -44,6 +44,12 @@ class PreviewFragment : Fragment(R.layout.fragment_preview) {
             viewModel.apply {
                 soonLD.observe(viewLifecycleOwner, { soonAdapter.differ.submitList(it) })
                 previewLD.observe(viewLifecycleOwner, { previewAdapter.differ.submitList(it) })
+                errorLD.observe(viewLifecycleOwner, {
+                    if (it.isNotEmpty()) {
+                        tvError.text = it
+                        tvError.visibility = View.VISIBLE
+                    }
+                })
             }
 
             previewAdapter.setOnItemClickListener { position, preview ->

@@ -34,15 +34,23 @@ class SoonAdapter : RecyclerView.Adapter<SoonAdapter.SoonViewHolder>() {
     override fun getItemCount() = if (differ.currentList.isEmpty()) 0 else Integer.MAX_VALUE
 
     private fun bind(holder: SoonAdapter.SoonViewHolder, position: Int) {
-        val soon = differ.currentList[position % differ.currentList.size]
+        val preview = differ.currentList[position % differ.currentList.size]
         holder.binding.apply {
             Glide.with(ivSoon.context)
-                .load(soon.poster_url)
+                .load(preview.poster_url)
                 .transform(CenterCrop(), RoundedCorners(10))
                 .diskCacheStrategy(DiskCacheStrategy.ALL)
                 .into(ivSoon)
-            tvTitle.text = soon.title
-            tvDateSoon.text = soon.date
+            tvTitle.text = preview.title
+            tvDateSoon.text = preview.date
+
+            root.setOnClickListener { onItemClickListener?.let { it(position, preview) } }
         }
+    }
+
+    private var onItemClickListener: ((Int, Preview) -> Unit)? = null
+
+    fun setOnItemClickListener(listener: (Int, Preview) -> Unit) {
+        onItemClickListener = listener
     }
 }

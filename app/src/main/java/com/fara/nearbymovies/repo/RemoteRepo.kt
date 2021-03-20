@@ -11,6 +11,10 @@ class RemoteRepo @Inject constructor() : ViewModel() {
 
     //*CinemaCity
 
+    fun getCinemaCityError(doc: Document): String = doc
+        .getElementsByClass("home-slider__txt")
+        .text()
+
     fun getCinemaCitySchedule(doc: Document): MutableList<Session> {
         val listOfSessions = mutableListOf<Session>()
         repeat(getCinemaCityListOfSessions(doc).indices.count()) {

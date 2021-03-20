@@ -52,14 +52,19 @@ class MovieViewModel @Inject constructor(
                         previewLD.postValue(getCinemaCityPreviewList(doc))
                         insertCinemaCityPreviewToDb()
                     }
+
                     if (getCinemaCitySoonList(doc) != getCinemaCitySoonFromDb) {
                         deleteAllSoonByCinemaId(CINEMA_CITY_BASE_ID)
                         soonLD.postValue(getCinemaCitySoonList(doc))
                         insertCinemaCitySoonToDb()
                     }
+
                     if (getCinemaCityDetailPreviewList() != getCinemaCityDetailListFromDb) {
                         insertDetail(getCinemaCityDetailPreviewList())
                     }
+
+                    if (getCinemaCityPreviewList(doc).isEmpty())
+                        errorLD.postValue(remoteRepo.getCinemaCityError(doc))
                 } else {
                     viewModelScope.launch(Dispatchers.Main) {
                         Toast.makeText(
@@ -83,6 +88,8 @@ class MovieViewModel @Inject constructor(
     var positionPreview = 0
     private lateinit var detailPremiere: Detail
     private val detailList = mutableListOf<Detail>()
+
+    val errorLD = MutableLiveData<String>()
 
     suspend fun updateDetailPreview() {
         if (getCinemaCityDetailListFromDb().isEmpty()) {
@@ -180,6 +187,13 @@ class MovieViewModel @Inject constructor(
 
     private suspend fun insertCinemaCitySoonToDb() {
         localRepo.apply {
+
+            if (!getCityNamesList().contains(ODESSA_BASE_TITLE))
+                insertCity(City(city = ODESSA_BASE_TITLE))
+
+            if (!getCinemaNamesList().contains(CINEMA_CITY_BASE_TITLE))
+                insertCinema(Cinema(city_id = ODESSA_BASE_ID, cinema = CINEMA_CITY_BASE_TITLE))
+
             soonList.forEach {
                 insertPreview(
                     Preview(
